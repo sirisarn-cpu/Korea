@@ -1,0 +1,2045 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>แบบฝึกหัดวิเคราะห์โครงสร้างประโยคและอนุประโยคภาษาเกาหลี (한국어 겹문장과 안긴 절)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Noto Sans Thai & Noto Sans KR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            thai: ['"Noto Sans Thai"', 'sans-serif'],
+            korean: ['"Noto Sans KR"', '"Noto Sans Thai"', 'sans-serif'],
+          },
+          colors: {
+            paper: '#f8f7f4',
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    body {
+      font-family: 'Noto Sans Thai', sans-serif;
+      background-color: #f8f7f4;
+    }
+    .font-kr {
+      font-family: 'Noto Sans KR', 'Noto Sans Thai', sans-serif;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.25s ease-out forwards;
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.95); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .animate-pop {
+      animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    /* Custom scrollbar for horizontal filter bars on mobile */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col antialiased selection:bg-blue-100 selection:text-blue-900">
+
+  <!-- Toast Notification Container (No alert/confirm) -->
+  <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none max-w-sm w-full px-3 sm:px-0"></div>
+
+  <!-- Header -->
+  <header class="bg-white/95 backdrop-blur-md border-b border-slate-200/90 sticky top-0 z-30 shadow-xs">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <!-- Brand & Title -->
+        <div class="flex items-start gap-3.5">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white flex items-center justify-center shrink-0 shadow-sm font-kr font-bold text-xl">
+            절
+          </div>
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <h1 class="text-base sm:text-lg md:text-xl font-bold text-slate-900 leading-snug">
+                แบบฝึกหัดวิเคราะห์โครงสร้างประโยคและอนุประโยคภาษาเกาหลี
+              </h1>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-500 mt-0.5 flex flex-wrap items-center gap-x-2">
+              <span class="font-kr font-medium text-indigo-700">한국어 겹문장과 안긴 절</span>
+              <span class="hidden sm:inline text-slate-300">•</span>
+              <span>อ้างอิงตำรา <span class="font-kr text-slate-600">《시와 그림이 있는 한국어 표현 문법》</span> บทที่ 1–4</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Primary Navigation Tabs -->
+        <nav class="flex items-center p-1 bg-slate-100 rounded-2xl border border-slate-200/80 shrink-0 self-start md:self-center" role="tablist">
+          <button
+            id="tab-practice"
+            type="button"
+            class="main-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center gap-1.5"
+            data-view="practice"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            <span>แบบฝึกหัดวิเคราะห์ประโยค</span>
+          </button>
+          <button
+            id="tab-guide"
+            type="button"
+            class="main-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center gap-1.5"
+            data-view="guide"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            <span>คู่มือไวยากรณ์ (บทที่ 1–4)</span>
+          </button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6">
+
+    <!-- ========================================================= -->
+    <!-- VIEW 1: INTERACTIVE PRACTICE MODE                         -->
+    <!-- ========================================================= -->
+    <div id="view-practice" class="space-y-5">
+
+      <!-- Category Filter & Status Bar -->
+      <section class="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-4 space-y-3.5">
+        <!-- Category Filter Chips -->
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5" id="category-filters" role="tablist" aria-label="ตัวกรองประเภทอนุประโยค">
+          <!-- Injected by JS -->
+        </div>
+
+        <!-- Progress Bar & Controls Row -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-100">
+          <!-- Progress & Score -->
+          <div class="flex flex-wrap items-center gap-2.5">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 text-xs sm:text-sm font-medium">
+              <span class="text-slate-500">ข้อที่</span>
+              <strong id="stat-progress" class="text-slate-900">1 / 20</strong>
+            </div>
+            <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs sm:text-sm font-medium">
+              <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>ถูกสมบูรณ์: <strong id="stat-score">0</strong></span>
+            </div>
+          </div>
+
+          <!-- Utility Navigator Controls -->
+          <div class="flex items-center gap-2">
+            <button
+              id="btn-randomize"
+              type="button"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 transition-colors cursor-pointer"
+              title="สุ่มลำดับข้อสอบในหมวดนี้"
+            >
+              <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              <span>สุ่มข้อ</span>
+            </button>
+            <button
+              id="btn-reset-all"
+              type="button"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium bg-white hover:bg-rose-50 text-slate-600 hover:text-rose-700 border border-slate-200 hover:border-rose-200 transition-colors cursor-pointer"
+              title="เริ่มทำหมวดนี้ใหม่ทั้งหมด"
+            >
+              <span>รีเซ็ตชุดนี้</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Thin Progress Bar -->
+        <div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+          <div id="progress-bar" class="h-full bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full transition-all duration-300" style="width: 5%;"></div>
+        </div>
+      </section>
+
+      <!-- Active Exercise Workspace -->
+      <div id="exercise-container" class="space-y-5">
+        <article class="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
+
+          <!-- Question Card Top Bar -->
+          <div class="px-5 sm:px-7 py-4 bg-slate-50/80 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-2">
+              <span id="q-number-badge" class="inline-flex items-center px-2.5 py-1 rounded-lg bg-slate-900 text-white text-xs font-bold">
+                ข้อ 1
+              </span>
+              <span id="q-difficulty-badge" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold">
+                พื้นฐาน
+              </span>
+              <span id="q-chapter-badge" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white border border-slate-200 text-slate-600 font-kr">
+                บทที่ 3: 명사절
+              </span>
+            </div>
+
+            <!-- Audio, Translation, Hint Toggles -->
+            <div class="flex flex-wrap items-center gap-2">
+              <button
+                id="btn-tts"
+                type="button"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-200 hover:border-blue-200 transition-colors cursor-pointer"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                </svg>
+                <span>ฟังเสียง</span>
+              </button>
+
+              <button
+                id="btn-toggle-trans"
+                type="button"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 transition-colors cursor-pointer"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                </svg>
+                <span id="label-trans">แปลภาษาไทย</span>
+              </button>
+
+              <button
+                id="btn-toggle-hint"
+                type="button"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium bg-white hover:bg-amber-50 text-slate-700 hover:text-amber-700 border border-slate-200 hover:border-amber-200 transition-colors cursor-pointer"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+                <span id="label-hint">คำใบ้</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Question Card Body -->
+          <div class="p-5 sm:p-7 space-y-7">
+
+            <!-- Collapsible Translation & Hint -->
+            <div id="helper-boxes" class="hidden space-y-2.5">
+              <div id="box-trans" class="hidden animate-fade-in px-4 py-3 rounded-2xl bg-blue-50/70 border border-blue-200/70 text-sm text-blue-950 flex items-start gap-2.5">
+                <span class="font-semibold text-blue-700 shrink-0">คำแปล:</span>
+                <span id="text-trans"></span>
+              </div>
+              <div id="box-hint" class="hidden animate-fade-in px-4 py-3 rounded-2xl bg-amber-50/80 border border-amber-200/80 text-sm text-amber-950 flex items-start gap-2.5">
+                <span class="font-semibold text-amber-700 shrink-0">คำใบ้:</span>
+                <span id="text-hint"></span>
+              </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- STEP 1: SEGMENT HIGHLIGHTING               -->
+            <!-- ========================================== -->
+            <section class="space-y-3.5">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center shrink-0">1</span>
+                  <h2 class="text-sm sm:text-base font-bold text-slate-900">
+                    ขั้นตอนที่ 1: ระบายสีแยกส่วนประโยค
+                  </h2>
+                </div>
+                <span class="text-xs text-slate-500">เลือกพู่กันแล้วคลิกที่กลุ่มคำด้านล่าง</span>
+              </div>
+
+              <!-- Helpful Rule Note -->
+              <div class="px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200/80 text-xs text-slate-600 flex items-start gap-2 leading-relaxed">
+                <svg class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>
+                  <strong>หลักการ:</strong> คำนามที่ถูกขยาย (<span class="font-kr text-emerald-700 font-medium">수식받는 명사</span>) ถือเป็นส่วนหนึ่งของ<strong class="text-blue-700">ประโยคหลัก</strong> ส่วนอนุประโยคที่ขยายหรือซ้อนอยู่ให้ระบายเป็น<strong class="text-amber-700">อนุประโยค / ส่วนขยาย</strong> (สำหรับ <span class="font-kr">이어진 문장</span> ให้ระบายประโยคหน้าเป็นอนุประโยค และประโยคหลังเป็นประโยคหลัก)
+                </span>
+              </div>
+
+              <!-- Brush Selector Buttons -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5" id="brush-palette">
+                <button type="button" data-brush="main" class="brush-btn flex items-center gap-3 px-4 py-3 rounded-2xl border-2 text-left transition-all cursor-pointer">
+                  <span class="w-3.5 h-3.5 rounded-full bg-blue-500 shrink-0 ring-4 ring-blue-100"></span>
+                  <div class="leading-tight">
+                    <div class="text-sm font-bold">ประโยคหลัก</div>
+                    <div class="text-[11px] font-kr opacity-80">안은 문장 / 주절</div>
+                  </div>
+                </button>
+
+                <button type="button" data-brush="clause" class="brush-btn flex items-center gap-3 px-4 py-3 rounded-2xl border-2 text-left transition-all cursor-pointer">
+                  <span class="w-3.5 h-3.5 rounded-full bg-amber-500 shrink-0 ring-4 ring-amber-100"></span>
+                  <div class="leading-tight">
+                    <div class="text-sm font-bold">อนุประโยค / ส่วนขยาย</div>
+                    <div class="text-[11px] font-kr opacity-80">안긴 절 / 종속절</div>
+                  </div>
+                </button>
+
+                <button type="button" data-brush="erase" class="brush-btn flex items-center gap-3 px-4 py-3 rounded-2xl border-2 text-left transition-all cursor-pointer">
+                  <svg class="w-4 h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  <div class="leading-tight">
+                    <div class="text-sm font-bold">ยางลบ</div>
+                    <div class="text-[11px] opacity-80">ล้างสีที่เลือก</div>
+                  </div>
+                </button>
+              </div>
+
+              <!-- Clickable Korean Sentence Area -->
+              <div class="bg-[#faf9f6] border border-slate-200/90 rounded-2xl px-4 sm:px-6 py-9 min-h-[136px] flex items-center justify-center">
+                <div id="sentence-chips" class="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-8 leading-relaxed">
+                  <!-- Chips injected by JS -->
+                </div>
+              </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- STEP 2: MAIN CLAUSE TYPE SELECTION         -->
+            <!-- ========================================== -->
+            <section class="space-y-3 pt-2 border-t border-slate-100">
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center shrink-0">2</span>
+                <h2 class="text-sm sm:text-base font-bold text-slate-900">
+                  ขั้นตอนที่ 2: เลือกประเภทหลักของอนุประโยค (<span class="font-kr text-indigo-700">절의 유형</span>)
+                </h2>
+              </div>
+
+              <div id="main-type-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                <!-- 6 Main Type Cards injected by JS -->
+              </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- STEP 3: SUBTYPE SELECTION (DYNAMIC)        -->
+            <!-- ========================================== -->
+            <section id="step-3-section" class="space-y-3 pt-2 border-t border-slate-100">
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center shrink-0">3</span>
+                <h2 class="text-sm sm:text-base font-bold text-slate-900">
+                  ขั้นตอนที่ 3: เลือกประเภทย่อย (<span class="font-kr text-indigo-700">세부 유형</span>)
+                </h2>
+              </div>
+
+              <div id="subtype-container">
+                <!-- Dynamically populated based on Step 2 -->
+              </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- ACTION BUTTONS & NAVIGATION                -->
+            <!-- ========================================== -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-slate-100">
+              <div class="flex flex-wrap items-center gap-2">
+                <button
+                  id="btn-check"
+                  type="button"
+                  class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-semibold text-sm shadow-sm transition-all cursor-pointer"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>ตรวจคำตอบ</span>
+                </button>
+
+                <button
+                  id="btn-solution"
+                  type="button"
+                  class="inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 font-semibold text-sm border border-amber-200 transition-colors cursor-pointer"
+                >
+                  <span>ดูเฉลยทันที</span>
+                </button>
+
+                <button
+                  id="btn-reset-q"
+                  type="button"
+                  class="inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl bg-white hover:bg-slate-100 text-slate-600 font-medium text-sm border border-slate-200 transition-colors cursor-pointer"
+                >
+                  <span>ล้างข้อนี้</span>
+                </button>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button
+                  id="btn-prev"
+                  type="button"
+                  class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1 px-4 py-3 rounded-xl bg-white hover:bg-slate-100 disabled:opacity-40 disabled:pointer-events-none text-slate-700 font-medium text-sm border border-slate-200 transition-colors cursor-pointer"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                  </svg>
+                  <span>ก่อนหน้า</span>
+                </button>
+
+                <button
+                  id="btn-next"
+                  type="button"
+                  class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1 px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm transition-colors cursor-pointer"
+                >
+                  <span id="label-next">ข้อถัดไป</span>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ========================================== -->
+        <!-- DETAILED EXPLANATION PANEL                 -->
+        <!-- ========================================== -->
+        <section id="explanation-panel" class="hidden animate-fade-in bg-white rounded-3xl border border-slate-200/90 shadow-xs p-5 sm:p-7 space-y-5">
+          <!-- Step-by-step Pass/Fail Summary Badges -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+            <div class="flex items-center gap-2.5">
+              <div id="exp-status-icon" class="w-9 h-9 rounded-2xl flex items-center justify-center shrink-0"></div>
+              <div>
+                <h3 id="exp-status-title" class="font-bold text-slate-900 text-base">ผลการตรวจคำตอบ</h3>
+                <p id="exp-status-sub" class="text-xs text-slate-500"></p>
+              </div>
+            </div>
+            <div id="exp-step-badges" class="flex flex-wrap items-center gap-1.5">
+              <!-- 3 Pass/Fail Badges injected by JS -->
+            </div>
+          </div>
+
+          <!-- Bracketed Syntactic Analysis Box -->
+          <div class="p-4 sm:p-5 rounded-2xl bg-slate-900 text-white space-y-2">
+            <div class="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">
+              โครงสร้างประโยคแบบวงเล็บ (구문 분석)
+            </div>
+            <div id="exp-bracketed" class="font-kr text-lg sm:text-xl font-medium leading-relaxed"></div>
+            <div id="exp-translation" class="text-xs sm:text-sm text-slate-300 pt-1 border-t border-slate-700/80"></div>
+          </div>
+
+          <!-- Metadata Grid: Correct Answer, Matrix Role, Diagnostic Test -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            <div class="p-4 rounded-2xl bg-blue-50/60 border border-blue-200/70 space-y-1.5">
+              <div class="text-xs font-bold text-blue-800">คำตอบที่ถูกต้องและหน้าที่ในประโยคหลัก</div>
+              <div id="exp-correct-types" class="text-sm font-semibold text-slate-900 font-kr"></div>
+              <div id="exp-matrix-role" class="text-xs sm:text-sm text-blue-900/90"></div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200/70 space-y-1.5">
+              <div class="text-xs font-bold text-emerald-800">เกณฑ์การตรวจสอบจากตำรา (진단 기준)</div>
+              <div id="exp-diagnostic" class="text-xs sm:text-sm text-emerald-950 leading-relaxed"></div>
+            </div>
+          </div>
+
+          <!-- Full Detailed Textbook Explanation -->
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+            <div class="text-xs font-bold text-slate-700">คำอธิบายละเอียด</div>
+            <p id="exp-detail" class="text-sm text-slate-700 leading-relaxed"></p>
+          </div>
+        </section>
+      </div>
+
+      <!-- End-of-Set Summary Card -->
+      <section id="summary-container" class="hidden animate-fade-in bg-white rounded-3xl border border-slate-200/90 shadow-xs p-6 sm:p-10 space-y-7">
+        <div class="text-center space-y-2.5">
+          <div class="w-16 h-16 rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white mx-auto flex items-center justify-center shadow-md">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-slate-900">สรุปผลการวิเคราะห์โครงสร้างประโยค</h2>
+          <p id="summary-category-label" class="text-sm text-slate-500"></p>
+        </div>
+
+        <!-- Top 3 Summary Stats -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto">
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-center">
+            <div class="text-xs text-slate-500 font-medium">จำนวนข้อในหมวดนี้</div>
+            <div id="sum-total" class="text-2xl font-bold text-slate-900 mt-1">20 ข้อ</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200/80 text-center">
+            <div class="text-xs text-emerald-700 font-medium">ตอบถูกสมบูรณ์ (ครบ 3 ขั้น)</div>
+            <div id="sum-perfect" class="text-2xl font-bold text-emerald-700 mt-1">0 ข้อ</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-blue-50 border border-blue-200/80 text-center">
+            <div class="text-xs text-blue-700 font-medium">ความแม่นยำรวม</div>
+            <div id="sum-accuracy" class="text-2xl font-bold text-blue-700 mt-1">0%</div>
+          </div>
+        </div>
+
+        <!-- Breakdown by Clause Type -->
+        <div class="max-w-2xl mx-auto space-y-3">
+          <h3 class="text-sm font-bold text-slate-800">คะแนนแยกตามประเภทของอนุประโยค</h3>
+          <div id="summary-breakdown" class="space-y-2.5">
+            <!-- Breakdown rows injected by JS -->
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <button
+            id="btn-sum-retry"
+            type="button"
+            class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-xs transition-colors cursor-pointer"
+          >
+            ทำชุดนี้อีกครั้ง
+          </button>
+          <button
+            id="btn-sum-all"
+            type="button"
+            class="px-6 py-3 rounded-xl bg-white hover:bg-slate-100 text-slate-700 font-semibold text-sm border border-slate-200 transition-colors cursor-pointer"
+          >
+            ฝึกทั้งหมด (20 ข้อ)
+          </button>
+          <button
+            id="btn-sum-guide"
+            type="button"
+            class="px-6 py-3 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold text-sm border border-indigo-200 transition-colors cursor-pointer"
+          >
+            ทบทวนคู่มือไวยากรณ์
+          </button>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- VIEW 2: GRAMMAR REFERENCE GUIDE (CHAPTERS 1-4)            -->
+    <!-- ========================================================= -->
+    <div id="view-guide" class="hidden space-y-6 animate-fade-in">
+
+      <!-- Intro Banner -->
+      <section class="bg-gradient-to-br from-slate-900 to-indigo-950 text-white rounded-3xl p-6 sm:p-8 shadow-sm space-y-2">
+        <div class="inline-flex items-center px-3 py-1 rounded-full bg-white/10 text-blue-200 text-xs font-medium font-kr">
+          시와 그림이 있는 한국어 표현 문법 (제1장 ~ 제4장)
+        </div>
+        <h2 class="text-xl sm:text-2xl font-bold">คู่มือสรุปโครงสร้างประโยคและอนุประโยคภาษาเกาหลี</h2>
+        <p class="text-sm text-slate-300 leading-relaxed max-w-3xl">
+          สรุปหลักการวิเคราะห์ประโยคความเดียว (<span class="font-kr text-white">홑문장</span>), ประโยคความซ้อนและประโยคความรวม (<span class="font-kr text-white">겹문장</span>) พร้อมเกณฑ์การจำแนกอนุประโยคทั้ง 5 ชนิดและประเภทย่อยตามตำรา
+        </p>
+      </section>
+
+      <!-- Card 1: Sentence Classification Tree & Units (Ch. 1 & 2) -->
+      <section class="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-5 sm:p-7 space-y-5">
+        <div class="flex items-center gap-2.5 border-b border-slate-100 pb-3">
+          <span class="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-sm">1</span>
+          <div>
+            <h3 class="font-bold text-slate-900 text-base sm:text-lg">แผนผังประเภทประโยคภาษาเกาหลี (บทที่ 1–2)</h3>
+            <p class="text-xs text-slate-500">หน่วยทางไวยากรณ์: <span class="font-kr">어절</span> (หน่วยเว้นวรรค) → <span class="font-kr">구</span> (วลี) → <span class="font-kr">절</span> (อนุประโยค มีประธาน+ภาคแสดงแต่ไม่เป็นอิสระ) → <span class="font-kr">문장</span> (ประโยคสมบูรณ์)</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+          <!-- 홑문장 -->
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+            <div class="font-bold text-slate-900 font-kr">홑문장 (ประโยคความเดียว)</div>
+            <p class="text-xs text-slate-600 leading-relaxed">มีโครงสร้างประธาน + ภาคแสดงเพียง <strong>1 คู่</strong></p>
+            <div class="text-xs font-kr bg-white p-2.5 rounded-xl border border-slate-200/70 text-slate-700">
+              • 꽃이 피었네.<br />
+              • 우리는 사랑의 말을 해야지.
+            </div>
+            <p class="text-[11px] text-slate-500">*ตำราชี้ว่า <span class="font-kr">서울과 부산은 도시다</span> ถือเป็น 홑문장 (구연결)</p>
+          </div>
+
+          <!-- 안은 문장 -->
+          <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-2">
+            <div class="font-bold text-amber-900 font-kr">겹문장 ① 안은 문장 (ประโยคความซ้อน)</div>
+            <p class="text-xs text-amber-950/80 leading-relaxed">มีอนุประโยค (<span class="font-kr">안긴 절</span>) ซ้อนอยู่เป็นส่วนประกอบในประโยคหลัก แบ่งเป็น <strong>5 ชนิด</strong>:</p>
+            <ul class="text-xs space-y-1 text-amber-950 font-medium">
+              <li>1. <span class="font-kr font-bold">명사절</span> (นามานุประโยค: -음, -기)</li>
+              <li>2. <span class="font-kr font-bold">관형사절</span> (คุณานุประโยค: -은/는/을/던)</li>
+              <li>3. <span class="font-kr font-bold">부사절</span> (วิเศษณานุประโยค: -이, -게, -도록)</li>
+              <li>4. <span class="font-kr font-bold">인용절</span> (อนุประโยคอ้างคำพูด: 라고, 고)</li>
+              <li>5. <span class="font-kr font-bold">서술절</span> (อนุประโยคภาคแสดง: ไม่มีตัวบ่งชี้)</li>
+            </ul>
+          </div>
+
+          <!-- 이어진 문장 -->
+          <div class="p-4 rounded-2xl bg-blue-50/70 border border-blue-200/80 space-y-2">
+            <div class="font-bold text-blue-900 font-kr">겹문장 ② 이어진 문장 (ประโยคความรวม)</div>
+            <p class="text-xs text-blue-950/80 leading-relaxed">นำประโยคย่อย 2 ประโยคมาเชื่อมกันด้วยวิภัตติเชื่อม (<span class="font-kr">연결 어미</span>) แบ่งเป็น <strong>2 ชนิด</strong>:</p>
+            <ul class="text-xs space-y-1.5 text-blue-950">
+              <li>
+                <strong class="font-kr">• 대등하게 이어진 문장</strong> (สมภาค): <span class="font-kr">-고, -거나, -지만</span> (ย้ายแทรกกลางประโยคหลังไม่ได้)
+              </li>
+              <li>
+                <strong class="font-kr">• 종속적으로 이어진 문장</strong> (อนุภาค): <span class="font-kr">-아서, -(으)면, -(으)니</span> (ย้ายแทรกกลางประโยคหลังได้เหมือน 부사절)
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Card 2: 명사절 Comparison (Ch. 3) -->
+      <section class="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-5 sm:p-7 space-y-4">
+        <div class="flex items-center gap-2.5 border-b border-slate-100 pb-3">
+          <span class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-sm">2</span>
+          <div>
+            <h3 class="font-bold text-slate-900 text-base sm:text-lg">การเปรียบเทียบ <span class="font-kr text-indigo-700">명사절</span> : <span class="font-kr">-음</span> vs <span class="font-kr">-기</span> (บทที่ 3)</h3>
+            <p class="text-xs text-slate-500">อนุประโยคที่ใส่วิภัตตินาม (<span class="font-kr">명사형 어미</span>) เพื่อทำหน้าที่เป็นประธาน กรรม วิเศษณ์ หรือภาคแสดงในประโยคหลัก</p>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="bg-slate-100/90 text-slate-700">
+                <th class="p-3 rounded-tl-xl font-bold w-1/5">เกณฑ์เปรียบเทียบ</th>
+                <th class="p-3 font-bold font-kr text-indigo-800 w-2/5">-음 명사절 ([+기정])</th>
+                <th class="p-3 rounded-tr-xl font-bold font-kr text-amber-800 w-2/5">-기 명사절 ([+미정])</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr>
+                <td class="p-3 font-semibold text-slate-700">ความหมายหลัก</td>
+                <td class="p-3"><strong>เหตุการณ์ที่เกิดขึ้นแล้ว / ข้อเท็จจริงที่แน่นอน</strong> (<span class="font-kr">[+기정 / +사실성]</span>) มีความเป็นรูปธรรมชัดเจน</td>
+                <td class="p-3"><strong>เหตุการณ์ที่ยังไม่เกิดขึ้น / การกระทำทั่วไป</strong> (<span class="font-kr">[+미정 / -사실성]</span>) ความหวังหรือความตั้งใจ</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold text-slate-700">ภาคแสดงประโยคหลักที่มักใช้คู่กัน</td>
+                <td class="p-3 font-kr text-indigo-900 font-medium">알다, 깨닫다, 후회하다, 분명하다, 밝혀지다, 기억하다</td>
+                <td class="p-3 font-kr text-amber-900 font-medium">바라다, 기원하다, 약속하다, 결심하다, 두렵다, 기다리다</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold text-slate-700">ตัวอย่างเปรียบเทียบจากตำรา</td>
+                <td class="p-3">
+                  <div class="font-kr font-medium text-slate-900">동근 씨와 나영이를 만나게 <strong>함이</strong> 문제였어.</div>
+                  <div class="text-xs text-slate-500 mt-0.5">การที่ทำให้ทั้งสองคนเจอกัน (เจอกันไปแล้ว) เป็นปัญหา</div>
+                </td>
+                <td class="p-3">
+                  <div class="font-kr font-medium text-slate-900">동근 씨와 나영이를 만나게 <strong>하기가</strong> 문제야.</div>
+                  <div class="text-xs text-slate-500 mt-0.5">การจะทำให้ทั้งสองคนเจอกัน (ยังไม่เจอ) เป็นปัญหา</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-rose-50/70 border border-rose-200/70 text-xs text-rose-950 space-y-1">
+          <div class="font-bold text-rose-800">ข้อควรระวังจากบทที่ 3:</div>
+          <p>• <strong>แยกคำนามแผลงกับรูปนาม:</strong> <span class="font-kr">그런 <strong>삶</strong></span> (คำนาม ขยายด้วย 관형어) ต่างจาก <span class="font-kr">네가 그렇게 <strong>삶</strong>은</span> (명사절 ขยายด้วย 부사어)</p>
+          <p>• <strong>ตัวสะกดที่มักผิด:</strong> ไม่มีรูป <span class="font-kr">*없슴</span> ต้องเขียน <span class="font-kr font-bold">없음</span> และไม่มี <span class="font-kr">*-므로써</span> ต้องเขียน <span class="font-kr font-bold">-(으)ㅁ으로써</span></p>
+        </div>
+      </section>
+
+      <!-- Card 3: 관형사절 Comparison (Ch. 4) -->
+      <section class="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-5 sm:p-7 space-y-4">
+        <div class="flex items-center gap-2.5 border-b border-slate-100 pb-3">
+          <span class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center text-sm">3</span>
+          <div>
+            <h3 class="font-bold text-slate-900 text-base sm:text-lg">การเปรียบเทียบ <span class="font-kr text-emerald-700">관형사절</span> : <span class="font-kr">관계 관형사절</span> vs <span class="font-kr">동격 관형사절</span> (บทที่ 4)</h3>
+            <p class="text-xs text-slate-500">อนุประโยคที่วางหน้าคำนามเพื่อขยายความ โดยมีเกณฑ์แยก 3 ข้อสำคัญจากตำรา</p>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="bg-slate-100/90 text-slate-700">
+                <th class="p-3 rounded-tl-xl font-bold w-1/5">เกณฑ์ 3 ข้อ</th>
+                <th class="p-3 font-bold font-kr text-emerald-800 w-2/5">관계 관형사절 (เชิงสัมพันธ์)</th>
+                <th class="p-3 rounded-tr-xl font-bold font-kr text-blue-800 w-2/5">동격 관형사절 (สมศักดิ์ / เนื้อหา)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr>
+                <td class="p-3 font-semibold text-slate-700">1. คำนามเป็นส่วนใน 절 หรือไม่?</td>
+                <td class="p-3"><strong>เป็น</strong> (คำนามที่ถูกขยายทำหน้าที่เป็นประธาน/กรรม ฯลฯ ภายในอนุประโยคด้วย)</td>
+                <td class="p-3"><strong>ไม่เป็น</strong> (อนุประโยคครบสมบูรณ์ในตัวเอง และเป็น "เนื้อหาทั้งหมด" ของคำนามนั้น: <span class="font-kr">절 = 명사</span>)</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold text-slate-700">2. ละอนุประโยคออกได้หรือไม่?</td>
+                <td class="p-3"><strong>ละได้</strong> (ยกเว้นกรณีขยายคำนามไม่อิสระ เช่น <span class="font-kr">것</span>) เช่น <span class="font-kr">(내가 먹은) 사과가 맛있다</span></td>
+                <td class="p-3"><strong>ละไม่ได้</strong> (จำเป็นต่อความหมาย) เช่น <span class="font-kr">*나는 (그가 죽었다는) 사실을 믿을 수 없다</span></td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold text-slate-700">3. รูปแบบวิภัตติ (สั้น vs ยาว)</td>
+                <td class="p-3">มักเป็น<strong>รูปสั้น</strong> (<span class="font-kr">짧은 관형사절</span>): รากศัพท์ + <span class="font-kr">-은/-는/-을/-던</span></td>
+                <td class="p-3">มักเป็น<strong>รูปยาว</strong> (<span class="font-kr">긴 관형사절</span>: <span class="font-kr">-다는/-라는/-자는/-냐는</span>) แต่คำอย่าง <span class="font-kr">사실, 일, 기억</span> ใช้รูปสั้นได้</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold text-slate-700">ตัวอย่างจากตำรา</td>
+                <td class="p-3">
+                  <div class="font-kr font-medium text-slate-900">[내가 어제 들은] <strong>이야기</strong></div>
+                  <div class="text-xs text-slate-500 mt-0.5">어제 나는 <u>이야기</u>를 들었다 (이야기 เป็นกรรมใน 절)</div>
+                </td>
+                <td class="p-3">
+                  <div class="font-kr font-medium text-slate-900">[그녀가 유부녀라는] <strong>사실</strong></div>
+                  <div class="text-xs text-slate-500 mt-0.5">그녀는 유부녀이다 = <u>사실</u> (เป็นเนื้อหาทั้งหมด)</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          <div class="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-1">
+            <div class="font-bold text-amber-900">ข้อหลอกสำคัญ: คำนาม <span class="font-kr">사건, 소문, 질문</span></div>
+            <p class="text-amber-950 leading-relaxed">
+              แม้คำเหล่านี้มักใช้กับ 동격 แต่หากคำนามนั้นทำหน้าที่เป็นกรรมภายใน 절 เช่น <span class="font-kr font-medium">[내가 어제 목격한] 사건</span> (<span class="font-kr">사건을 목격했다</span>) จะต้องจัดเป็น <strong>관계 관형사절</strong>
+            </p>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 space-y-1">
+            <div class="font-bold text-emerald-900">การแยก <span class="font-kr">~는 것</span> ทั้ง 2 แบบ</div>
+            <p class="text-emerald-950 leading-relaxed">
+              • <span class="font-kr font-medium">[먹을] 것을 줘야 먹지</span> → <strong>관계</strong> (<span class="font-kr">것을 먹다</span>)<br />
+              • <span class="font-kr font-medium">[내가 혼자 밥 먹는] 것을 처음 보나?</span> → <strong>동격</strong> (เนื้อหาของ <span class="font-kr">것</span>)
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Card 4: 부사절, 인용절, 서술절 & Movement Test (Ch. 2) -->
+      <section class="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-5 sm:p-7 space-y-4">
+        <div class="flex items-center gap-2.5 border-b border-slate-100 pb-3">
+          <span class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 font-bold flex items-center justify-center text-sm">4</span>
+          <div>
+            <h3 class="font-bold text-slate-900 text-base sm:text-lg">สรุป <span class="font-kr">부사절 · 인용절 · 서술절</span> และเกณฑ์การย้ายตำแหน่ง (บทที่ 2)</h3>
+            <p class="text-xs text-slate-500">วิธีแยก <span class="font-kr">대등절</span> ออกจาก <span class="font-kr">종속절 / 부사절</span> ด้วยการทดสอบการย้ายตำแหน่ง (<span class="font-kr">이동 가능성</span>)</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs sm:text-sm">
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+            <div class="font-bold text-slate-900 font-kr">부사절 (วิเศษณานุประโยค)</div>
+            <p class="text-xs text-slate-600 leading-relaxed">ขยายภาคแสดงของประโยคหลัก สร้างจากปัจจัย <span class="font-kr font-semibold">-이</span> (<span class="font-kr">소리도 없이, 형과 달리</span>) วิภัตติ <span class="font-kr font-semibold">-게, -도록</span> หรือรูปเชื่อม/วลีที่แทรกในประโยคหลักได้ (<span class="font-kr">-아서, -기 때문에</span>)</p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+            <div class="font-bold text-slate-900 font-kr">인용절 (อนุประโยคอ้างคำพูด)</div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              • <strong>직접 인용절</strong>: ใช้ <span class="font-kr">"..."라고</span><br />
+              • <strong>간접 인용절</strong>: ใช้ <span class="font-kr">-다고/-라고/-자고/-냐고</span><br />
+              *ตำราบทที่ 2 ชี้ว่าเชิงหน้าที่สามารถมองเป็น <span class="font-kr">부사절</span> ชนิดหนึ่งที่ขยายกริยา <span class="font-kr">믿다, 주장하다</span> ได้
+            </p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+            <div class="font-bold text-slate-900 font-kr">서술절 (อนุประโยคภาคแสดง)</div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              เช่น <span class="font-kr font-medium">코끼리는 [코가 길다].</span><br />
+              จุดเด่น: <strong>ไม่มีตัวบ่งชี้ 절 (<span class="font-kr">절 표지 없음</span>)</strong> และสามารถสลับตำแหน่งส่วนประกอบออกมาได้ (<span class="font-kr">코가 코끼리는 길다</span>) จึงมักถูกถกเถียงกับแนวคิด <span class="font-kr">이중 주어 문장</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Movement Test Highlight Box -->
+        <div class="p-4 rounded-2xl bg-indigo-50/70 border border-indigo-200/80 space-y-2 text-xs sm:text-sm">
+          <div class="font-bold text-indigo-900">แบบทดสอบการย้ายตำแหน่ง (이동 가능성 테스트) เพื่อแยก 대등절 กับ 종속절/부사절</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            <div class="bg-white p-3 rounded-xl border border-emerald-200">
+              <div class="text-xs font-bold text-emerald-700 mb-1">✓ ย้ายแทรกกลางประโยคหลังได้ → 종속절 / 부사절</div>
+              <div class="font-kr text-xs text-slate-800 space-y-1">
+                <div><span class="text-amber-700 font-semibold">비가 와서</span> 땅바닥은 질척질척했다.</div>
+                <div>→ 땅바닥은 <span class="text-amber-700 font-semibold">비가 와서</span> 질척질척했다. (O)</div>
+              </div>
+            </div>
+            <div class="bg-white p-3 rounded-xl border border-rose-200">
+              <div class="text-xs font-bold text-rose-700 mb-1">✗ ย้ายแทรกกลางประโยคหลังไม่ได้ → 대등절</div>
+              <div class="font-kr text-xs text-slate-800 space-y-1">
+                <div><span class="text-amber-700 font-semibold">인생은 짧고</span> 예술은 길다.</div>
+                <div>→ *예술은 <span class="text-rose-600 font-semibold">인생은 짧고</span> 길다. (X ผิดไวยากรณ์)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <footer class="max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 text-center text-xs text-slate-400">
+    แบบฝึกหัดวิเคราะห์โครงสร้างประโยคภาษาเกาหลี • อ้างอิง 《시와 그림이 있는 한국어 표현 문법》 บทที่ 1–4
+  </footer>
+
+  <!-- Application Script -->
+  <script>
+    /**
+     * =========================================================================
+     * 1. GRAMMAR TAXONOMY & METADATA
+     * =========================================================================
+     */
+    const MAIN_TYPES = [
+      { id: '명사절', kr: '명사절', th: 'นามานุประโยค', hint: '-음, -기' },
+      { id: '관형사절', kr: '관형사절', th: 'คุณานุประโยค / ขยายนาม', hint: '-은, -는, -을, -던' },
+      { id: '부사절', kr: '부사절', th: 'วิเศษณานุประโยค', hint: '-이, -게, -도록, -기 때문에' },
+      { id: '인용절', kr: '인용절', th: 'อนุประโยคอ้างคำพูด', hint: '"..."라고, -다고' },
+      { id: '서술절', kr: '서술절', th: 'อนุประโยคภาคแสดง', hint: 'ไม่มีตัวบ่งชี้ 절' },
+      { id: '이어진 문장', kr: '이어진 문장', th: 'ประโยคความรวม', hint: '대등 / 종속' },
+    ];
+
+    const SUBTYPES_MAP = {
+      '명사절': [
+        {
+          id: 'noun_eum',
+          title: '-음 명사절',
+          desc: '[+기정] เหตุการณ์ที่เกิดขึ้นแล้ว / ข้อเท็จจริงที่รับรู้หรือพิสูจน์แล้ว',
+        },
+        {
+          id: 'noun_gi',
+          title: '-기 명사절',
+          desc: '[+미정] สิ่งที่ยังไม่เกิดขึ้น / ความหวัง / ความตั้งใจ / การกระทำทั่วไป',
+        },
+      ],
+      '관형사절': [
+        {
+          id: 'adj_rel',
+          title: '관계 관형사절',
+          desc: 'คุณานุประโยคเชิงสัมพันธ์ — คำนามที่ถูกขยายเป็นส่วนประกอบหนึ่งภายใน 절 ด้วย',
+        },
+        {
+          id: 'adj_app',
+          title: '동격 관형사절',
+          desc: 'คุณานุประโยคสมศักดิ์ — อนุประโยคเป็นเนื้อหาทั้งหมดของคำนาม (절 = 명사)',
+        },
+      ],
+      '부사절': [
+        {
+          id: 'adv_suffix',
+          title: '-이 / -게 / -도록 부사절',
+          desc: 'อนุประโยควิเศษณ์รูปปัจจัย/วิภัตติ (เช่น 소리도 없이, 형과 달리)',
+        },
+        {
+          id: 'adv_phrase',
+          title: '종속절·구 유형 부사절',
+          desc: 'รูปเชื่อมหรือวลี เช่น -아서, -기 때문에 ที่แทรกในประโยคหลักได้',
+        },
+      ],
+      '인용절': [
+        {
+          id: 'quote_direct',
+          title: '직접 인용절',
+          desc: 'อ้างคำพูดโดยตรง ใช้เครื่องหมายคำพูดและ "..."라고',
+        },
+        {
+          id: 'quote_indirect',
+          title: '간접 인용절',
+          desc: 'อ้างคำพูด/ความคิดโดยอ้อม ใช้ -다고 / -라고 / -자고 / -냐고',
+        },
+      ],
+      '서술절': [
+        {
+          id: 'pred_double',
+          title: '서술절 / 이중 주어 문장',
+          desc: 'อนุประโยคภาคแสดง ไม่มีตัวบ่งชี้ 절 (절 표지 없음)',
+        },
+      ],
+      '이어진 문장': [
+        {
+          id: 'conj_coord',
+          title: '대등하게 이어진 문장',
+          desc: 'ประโยคความรวมสมภาค — ย้ายประโยคหน้าไปแทรกกลางประโยคหลังไม่ได้',
+        },
+        {
+          id: 'conj_sub',
+          title: '종속적으로 이어진 문장',
+          desc: 'ประโยคความรวมอนุภาค — ย้ายประโยคหน้าไปแทรกกลางประโยคหลังได้',
+        },
+      ],
+    };
+
+    const DIFFICULTY_META = {
+      basic: { label: 'พื้นฐาน', cls: 'bg-emerald-100 text-emerald-800' },
+      mid: { label: 'กลาง', cls: 'bg-amber-100 text-amber-800' },
+      tricky: { label: 'ขั้นสูง·ข้อควรระวัง', cls: 'bg-rose-100 text-rose-800' },
+    };
+
+    /**
+     * =========================================================================
+     * 2. EXACT QUESTION BANK (20 QUESTIONS FROM TEXTBOOK CHAPTERS 1-4)
+     * =========================================================================
+     */
+    const QUESTIONS = [
+      // --- 명사절 (5) ---
+      {
+        id: 1,
+        mainType: '명사절',
+        subType: 'noun_eum',
+        difficulty: 'basic',
+        chapter: 'บทที่ 3: 명사절',
+        segments: [
+          { text: '백광호가', role: 'clause' },
+          { text: '무죄임이', role: 'clause' },
+          { text: '밝혀졌대.', role: 'main' },
+        ],
+        bracketed: '[백광호가 무죄임]이 밝혀졌대.',
+        thai: 'ได้ยินว่าพิสูจน์ออกมาแล้วว่าแบคกวางโฮเป็นผู้บริสุทธิ์',
+        hint: 'สังเกตวิภัตติ "-ㅁ" ในคำว่า "무죄임" ที่ตามด้วยคำช่วยประธาน "-이" และกริยา "밝혀지다" (ถูกเปิดเผยข้อเท็จจริง)',
+        matrixRole: 'ทำหน้าที่เป็น ประธาน (주어) ของประโยคหลัก โดยรับคำช่วยประธาน "-이" ต่อท้าย 명사절',
+        diagnostic: 'กริยา 밝혀지다 แสดงข้อเท็จจริงที่พิสูจน์แล้ว ([+기정]) จึงใช้วิภัตตินาม -음 (-ㅁ)',
+        explanation: 'เป็น -음 명사절 ([+기정]) แสดงข้อเท็จจริงที่เกิดขึ้นแล้ว/พิสูจน์แล้ว ใช้กับภาคแสดงเชิงรับรู้หรือเปิดเผย (밝혀지다) โดยมีคำช่วยประธาน -이 เกาะท้ายอนุประโยคเพื่อทำหน้าที่เป็นประธาน (주어) ของประโยคหลัก',
+      },
+      {
+        id: 2,
+        mainType: '명사절',
+        subType: 'noun_gi',
+        difficulty: 'basic',
+        chapter: 'บทที่ 3: 명사절',
+        segments: [
+          { text: '네가', role: 'clause' },
+          { text: '이번 시험에', role: 'clause' },
+          { text: '합격하기를', role: 'clause' },
+          { text: '바래.', role: 'main' },
+        ],
+        bracketed: '[네가 이번 시험에 합격하기]를 바래.',
+        thai: 'ฉันหวังว่าเธอจะสอบผ่านในการสอบครั้งนี้',
+        hint: 'สังเกตกริยาหลัก "바래 (바라다)" ที่แสดงความปรารถนาถึงสิ่งที่ยังไม่เกิดขึ้น และวิภัตติ "-기"',
+        matrixRole: 'ทำหน้าที่เป็น กรรม (목적어) ของกริยาหลัก 바라다 โดยมีคำช่วยกรรม "-를" ต่อท้าย',
+        diagnostic: 'กริยา 바라다 แสดงความหวังในสิ่งที่ยังไม่เกิดขึ้น ([+미정]) จึงใช้ -기 (หากใช้ *합격함을 จะผิดธรรมชาติ)',
+        explanation: 'เป็น -기 명사절 ([+미정]) แสดงเหตุการณ์ที่ยังไม่เกิดขึ้น ใช้คู่กับกริยาแสดงความหวัง (바라다) ตามตำราบทที่ 3 ตัวอย่างสถานการณ์ 1–2 โดยทำหน้าที่เป็นกรรม (목적어) ของประโยคหลัก',
+      },
+      {
+        id: 3,
+        mainType: '명사절',
+        subType: 'noun_eum',
+        difficulty: 'basic',
+        chapter: 'บทที่ 1 & 3: 명사절',
+        segments: [
+          { text: '나는', role: 'main' },
+          { text: '순희가', role: 'clause' },
+          { text: '매우', role: 'clause' },
+          { text: '부지런함을', role: 'clause' },
+          { text: '잘 알고 있다.', role: 'main' },
+        ],
+        bracketed: '나는 [순희가 매우 부지런함]을 잘 알고 있다.',
+        thai: 'ฉันรู้ดีว่าซุนฮีเป็นคนขยันมาก',
+        hint: 'มีประธาน 2 ตัวคือ "나는" (ประธานหลัก) และ "순희가" (ประธานของอนุประโยคที่ลงท้ายด้วย "-ㅁ")',
+        matrixRole: 'ทำหน้าที่เป็น กรรม (목적어) ของกริยาหลัก 알고 있다 (รับคำช่วยกรรม "-을")',
+        diagnostic: 'กริยา 알다 เป็นกริยาเชิงรับรู้ข้อเท็จจริง ([+기정]) จึงบังคับใช้วิภัตตินาม -음 (-ㅁ)',
+        explanation: 'เป็น -음 명사절 ([+기정]) ใช้กับกริยา 알다 เพื่อรับรู้ข้อเท็จจริงที่เป็นอยู่แล้ว โดยทั้งอนุประโยค "순희가 매우 부지런함" ทำหน้าที่เป็นกรรม (목적어) ของประโยคหลัก',
+      },
+      {
+        id: 4,
+        mainType: '명사절',
+        subType: 'noun_gi',
+        difficulty: 'mid',
+        chapter: 'บทที่ 3: 명사절 (-음 vs -기)',
+        segments: [
+          { text: '동근 씨와 나영이를', role: 'clause' },
+          { text: '만나게 하기가', role: 'clause' },
+          { text: '문제야.', role: 'main' },
+        ],
+        bracketed: '[동근 씨와 나영이를 만나게 하기]가 문제야.',
+        thai: 'ปัญหาคือการทำให้คุณดงกึนกับนายองได้เจอกัน (ซึ่งยังไม่ได้เกิดขึ้น)',
+        hint: 'เปรียบเทียบความหมายระหว่าง "만나게 함이 문제였어" กับ "만나게 하기가 문제야" จากบทที่ 3',
+        matrixRole: 'ทำหน้าที่เป็น ประธาน (주어) ของภาคแสดง 문제야 (รับคำช่วยประธาน "-가")',
+        diagnostic: 'ใช้ -기 ([+미정]) สื่อว่าทั้งสองคนยังไม่ได้เจอกัน และการจะทำให้เจอกันนั้นทำได้ยาก',
+        explanation: 'เปรียบเทียบกับ "만나게 함이 문제였어" ([+기정] เจอกันไปแล้วจึงเกิดปัญหา) ในประโยคนี้ใช้ -기 ([+미정]) เพราะทั้งสองคนยังไม่ได้เจอกัน และการทำให้ทั้งคู่ได้เจอกันคือสิ่งที่ยังมาไม่ถึงและเป็นเรื่องยาก',
+      },
+      {
+        id: 5,
+        mainType: '명사절',
+        subType: 'noun_eum',
+        difficulty: 'mid',
+        chapter: 'บทที่ 3: 명사절',
+        segments: [
+          { text: '한없이 소중했던 사랑이', role: 'clause' },
+          { text: '있었음을', role: 'clause' },
+          { text: '잊지 말고 기억해 줘요.', role: 'main' },
+        ],
+        bracketed: '[한없이 소중했던 사랑이 있었음]을 잊지 말고 기억해 줘요.',
+        thai: 'โปรดอย่าลืมและจงจดจำไว้ว่าเคยมีความรักที่ล้ำค่าอย่างหาที่สุดมิได้',
+        hint: 'สังเกตรูปอดีต "있었음" กับกริยา "기억해 줘요" ซึ่งเป็นเรื่องที่เกิดขึ้นไปแล้วในอดีต',
+        matrixRole: 'ทำหน้าที่เป็น กรรม (목적어) ของประโยคหลัก 잊지 말고 기억해 줘요',
+        diagnostic: 'ความรักเคยเกิดขึ้นจริงแล้วในอดีต ([+기정]) จึงต้องใช้ -음 (ตามตำราบทที่ 3 สถานการณ์ 4 หากใช้ *있었기를 จะผิด)',
+        explanation: 'เป็น -음 명사절 ([+기정]) เพราะความรักนั้นเคยเกิดขึ้นแล้วในอดีตและผู้พูดขอให้จดจำข้อเท็จจริงนั้นไว้ (ถ้าใช้ 있었기를 จะผิดไวยากรณ์ตามตัวอย่างเปรียบเทียบในตำราบทที่ 3)',
+      },
+
+      // --- 관형사절 (8) ---
+      {
+        id: 6,
+        mainType: '관형사절',
+        subType: 'adj_rel',
+        difficulty: 'basic',
+        chapter: 'บทที่ 4: 관형사절',
+        segments: [
+          { text: '내가', role: 'clause' },
+          { text: '어제', role: 'clause' },
+          { text: '들은', role: 'clause' },
+          { text: '이야기는', role: 'main', modifiedNoun: true },
+          { text: '참으로 충격적이었다.', role: 'main' },
+        ],
+        bracketed: '[내가 어제 들은] 이야기는 참으로 충격적이었다.',
+        thai: 'เรื่องราวที่ฉันได้ยินเมื่อวานนี้ช่างน่าตกใจจริง ๆ',
+        hint: 'ลองนำคำนาม "이야기" กลับเข้าไปในอนุประโยค "내가 어제 ___ 들었다" ดูว่าลงตัวหรือไม่',
+        matrixRole: 'ทำหน้าที่เป็น ส่วนขยายนาม (관형어) ขยายคำนาม "이야기" ซึ่งเป็นประธานของประโยคหลัก',
+        diagnostic: '1) 이야기 เป็นกรรมภายใน 절 (어제 나는 이야기를 들었다) 2) ละอนุประโยคออกได้ → 관계 관형사절',
+        explanation: 'เป็น 관계 관형사절 เพราะคำนาม "이야기" เป็นส่วนประกอบภายในอนุประโยคด้วย (เป็นกรรมของ 들었다: 어제 나는 이야기를 들었다) และสามารถละอนุประโยคออกได้โดยประโยคยังคงสมบูรณ์ (이야기는 참으로 충격적이었다)',
+      },
+      {
+        id: 7,
+        mainType: '관형사절',
+        subType: 'adj_app',
+        difficulty: 'basic',
+        chapter: 'บทที่ 4: 관형사절',
+        segments: [
+          { text: '나는', role: 'main' },
+          { text: '그녀가', role: 'clause' },
+          { text: '유부녀라는', role: 'clause' },
+          { text: '사실을', role: 'main', modifiedNoun: true },
+          { text: '도저히 믿을 수 없다.', role: 'main' },
+        ],
+        bracketed: '나는 [그녀가 유부녀라는] 사실을 도저히 믿을 수 없다.',
+        thai: 'ฉันไม่อาจเชื่อความจริงที่ว่าเธอแต่งงานแล้วได้เลย',
+        hint: 'สังเกตรูปยาว "-라는" และความสัมพันธ์ระหว่าง "그녀는 유부녀이다" กับคำนาม "사실"',
+        matrixRole: 'ทำหน้าที่เป็น ส่วนขยายนาม (관형어) บอกเนื้อหาทั้งหมดของคำนาม "사실" (กรรมของประโยคหลัก)',
+        diagnostic: '1) 그녀는 유부녀이다 = 사실 (사실 ไม่ใช่ส่วนประกอบใน 절) 2) ละอนุประโยคออกไม่ได้ 3) ใช้รูปยาว -라는 → 동격 관형사절',
+        explanation: 'เป็น 동격 관형사절 (긴 관형사절) เพราะ "그녀는 유부녀이다 = 사실" คำนาม "사실" ไม่ใช่ส่วนประกอบภายในอนุประโยค แต่เป็นชื่อเรียกเนื้อหาทั้งหมดของอนุประโยค และไม่สามารถละอนุประโยคออกได้',
+      },
+      {
+        id: 8,
+        mainType: '관형사절',
+        subType: 'adj_rel',
+        difficulty: 'tricky',
+        chapter: 'บทที่ 4: ข้อควรระวังเรื่องคุณศัพท์',
+        segments: [
+          { text: '나는', role: 'main' },
+          { text: '그녀에게', role: 'main' },
+          { text: '귀여운', role: 'clause' },
+          { text: '강아지를', role: 'main', modifiedNoun: true },
+          { text: '선물했다.', role: 'main' },
+        ],
+        bracketed: '나는 그녀에게 [귀여운] 강아지를 선물했다.',
+        thai: 'ฉันให้ลูกสุนัขที่น่ารักเป็นของขวัญแก่เธอ',
+        hint: 'คำคุณศัพท์ภาษาเกาหลีอย่าง "귀엽다 → 귀여운" ถือเป็นอนุประโยคในภาษาเกาหลีหรือไม่? (ดูบทที่ 4 หน้า 72–73)',
+        matrixRole: 'ทำหน้าที่เป็น ส่วนขยายนาม (관형어) ขยายคำนาม "강아지" (กรรมของประโยคหลัก)',
+        diagnostic: '강아지가 귀엽다 → 강아지 เป็นประธานภายใน 절 และละ "귀여운" ออกได้ → 관계 관형사절',
+        explanation: 'ข้อควรระวังจากบทที่ 4! ในภาษาเกาหลีคำคุณศัพท์ต้องผันด้วยวิภัตติขยายนาม "-은" จึงถือว่า "귀여운" (มาจาก 강아지가 귀엽다) เป็น 관계 관형사절 ทำให้ประโยคนี้เป็น 겹문장 ต่างจากภาษาอังกฤษ (a cute puppy) ที่ถือเป็น 홑문장',
+      },
+      {
+        id: 9,
+        mainType: '관형사절',
+        subType: 'adj_rel',
+        difficulty: 'tricky',
+        chapter: 'บทที่ 4: ข้อหลอก 동격 vs 관계',
+        segments: [
+          { text: '내가', role: 'clause' },
+          { text: '어제', role: 'clause' },
+          { text: '목격한', role: 'clause' },
+          { text: '사건이', role: 'main', modifiedNoun: true },
+          { text: '오늘 뉴스에 보도되었다.', role: 'main' },
+        ],
+        bracketed: '[내가 어제 목격한] 사건이 오늘 뉴스에 보도되었다.',
+        thai: 'เหตุการณ์ที่ฉันเห็นด้วยตาตนเองเมื่อวานนี้ถูกรายงานในข่าววันนี้',
+        hint: 'ระวัง! อย่าดูแค่คำว่า "사건" แล้วตอบ 동격 ทันที ลองเช็กว่า "사건" เป็นกรรมของ "목격하다" หรือไม่',
+        matrixRole: 'ทำหน้าที่เป็น ส่วนขยายนาม (관형어) ขยายคำนาม "사건" (ประธานของประโยคหลัก)',
+        diagnostic: '내가 어제 [사건을] 목격했다 → คำนาม 사건 เป็นกรรมภายในอนุประโยค จึงเป็น 관계 관형사절',
+        explanation: 'ข้อหลอกสำคัญจากบทที่ 4! แม้คำนามจะเป็น "사건" แต่นามนี้ทำหน้าที่เป็นกรรมภายในอนุประโยค (내가 어제 사건을 목격했다) จึงเป็น **관계 관형사절** ไม่ใช่ 동격 관형사절',
+      },
+      {
+        id: 10,
+        mainType: '관형사절',
+        subType: 'adj_app',
+        difficulty: 'basic',
+        chapter: 'บทที่ 4: 관형사절',
+        segments: [
+          { text: '그녀는', role: 'main' },
+          { text: '아들이', role: 'clause' },
+          { text: '사고를', role: 'clause' },
+          { text: '당했다는', role: 'clause' },
+          { text: '소식을', role: 'main', modifiedNoun: true },
+          { text: '들었다.', role: 'main' },
+        ],
+        bracketed: '그녀는 [아들이 사고를 당했다는] 소식을 들었다.',
+        thai: 'เธอได้ยินข่าวว่าลูกชายประสบอุบัติเหตุ',
+        hint: 'สังเกตรูปยาว "-다는" หน้าคำนาม "소식" และดูว่า "아들이 사고를 당했다" มีส่วนประกอบครบแล้วหรือยัง',
+        matrixRole: 'ทำหน้าที่เป็น ส่วนขยายนาม (관형어) แสดงเนื้อหาของคำนาม "소식" (กรรมของประโยคหลัก)',
+        diagnostic: '아들이 사고를 당했다 = 소식 (ครบประโยคสมบูรณ์ในตัวเอง + รูปยาว -다는) → 동격 관형사절',
+        explanation: 'เป็น 동격 관형사절 (긴 관형사절: -다는) เพราะ "아들이 사고를 당했다" เป็นประโยคที่ครบส่วนประกอบสมบูรณ์และเป็นเนื้อหาของคำว่า "소식" ไม่ได้ขาดคำว่า 소식 ไปเป็นส่วนประกอบใน 절',
+      },
+      {
+        id: 11,
+        mainType: '관형사절',
+        subType: 'adj_app',
+        difficulty: 'tricky',
+        chapter: 'บทที่ 2 & 4: 짧은 동격 관형사절',
+        segments: [
+          { text: '그는', role: 'main' },
+          { text: '우리가', role: 'clause' },
+          { text: '돌아온', role: 'clause' },
+          { text: '사실을', role: 'main', modifiedNoun: true },
+          { text: '모른다.', role: 'main' },
+        ],
+        bracketed: '그는 [우리가 돌아온] 사실을 모른다.',
+        thai: 'เขาไม่รู้ความจริงที่ว่าพวกเรากลับมาแล้ว',
+        hint: 'แม้จะใช้รูปสั้น "돌아온" (ไม่ใช่ 돌아왔다는) แต่ลองเช็กดูว่า "사실" เข้าไปอยู่ในประโยค "우리가 돌아왔다" ได้หรือไม่',
+        matrixRole: 'ทำหน้าที่เป็น ส่วนขยายนาม (관형어) แสดงเนื้อหาของคำนาม "사실" (กรรมของประโยคหลัก)',
+        diagnostic: '우리가 돌아왔다 = 사실 (사실 ไม่ใช่ส่วนใน 절) คำนาม 사실 ใช้ได้ทั้งรูปยาว (-다는) และรูปสั้น (-ㄴ) → 동격 관형사절',
+        explanation: 'เป็น 동격 관형사절 รูปสั้น (짧은 관형사절) ตามตำราบทที่ 4 คำนามกลุ่ม "사실, 약점, 결심" สามารถใช้ได้ทั้งรูปยาว (돌아왔다는) และรูปสั้น (돌아온) โดย "우리가 돌아왔다 = 사실"',
+      },
+      {
+        id: 12,
+        mainType: '관형사절',
+        subType: 'adj_rel',
+        difficulty: 'tricky',
+        chapter: 'บทที่ 4: ~는 것 (관계 vs 동격)',
+        segments: [
+          { text: '아니,', role: 'main' },
+          { text: '먹을', role: 'clause' },
+          { text: '것을', role: 'main', modifiedNoun: true },
+          { text: '줘야 먹지.', role: 'main' },
+        ],
+        bracketed: '아니, [먹을] 것을 줘야 먹지.',
+        thai: 'ก็ต้องให้ของกิน (สิ่งที่จะกิน) มาก่อนสิถึงจะกินได้',
+        hint: 'ลองนำคำนามไม่อิสระ "것" กลับไปใส่หน้ากริยา "먹다" ดูว่าเป็นกรรมของกินได้หรือไม่',
+        matrixRole: 'ทำหน้าที่เป็น ส่วนขยายนาม (관형어) ขยายคำนามไม่อิสระ "것" (กรรมของ 주다)',
+        diagnostic: '것 เป็นกรรมของ 먹다 ([것을] 먹다) จึงเป็น 관계 관형사절 (แม้จะละ 먹을 ไม่ได้เพราะ 것 เป็น 의존 명사)',
+        explanation: 'ตัวอย่างเปรียบเทียบ "~는 것" จากบทที่ 4: คำนามไม่อิสระ "것" ในที่นี้หมายถึง "ของกิน" และทำหน้าที่เป็นกรรมของ "먹다" (것을 먹다) จึงเป็น **관계 관형사절** (ข้อควรจำ: ละส่วนขยายไม่ได้เพราะ 것 เป็น 의존 명사)',
+      },
+      {
+        id: 13,
+        mainType: '관형사절',
+        subType: 'adj_app',
+        difficulty: 'tricky',
+        chapter: 'บทที่ 4: ~는 것 (관계 vs 동격)',
+        segments: [
+          { text: '내가', role: 'clause' },
+          { text: '혼자', role: 'clause' },
+          { text: '밥 먹는', role: 'clause' },
+          { text: '것을', role: 'main', modifiedNoun: true },
+          { text: '처음 보나?', role: 'main' },
+        ],
+        bracketed: '[내가 혼자 밥 먹는] 것을 처음 보나?',
+        thai: 'เพิ่งเคยเห็นฉันกินข้าวคนเดียวครั้งแรกเหรอ?',
+        hint: 'อนุประโยค "내가 혼자 밥 먹는다" มีทั้งประธานและกรรมครบอยู่แล้ว คำว่า "것" จึงเป็นเนื้อหาทั้งหมดของเหตุการณ์',
+        matrixRole: 'ทำหน้าที่เป็น ส่วนขยายนาม (관형어) บอกเนื้อหาของคำนามไม่อิสระ "것" (กรรมของ 보다)',
+        diagnostic: '내가 혼자 밥을 먹는다 = 것 (ครบส่วนประกอบใน 절 แล้ว) → 동격 관형사절',
+        explanation: 'ตัวอย่างเปรียบเทียบ "~는 것" จากบทที่ 4: อนุประโยค "내가 혼자 밥을 먹는다" มีส่วนประกอบครบสมบูรณ์อยู่แล้ว และเป็นเนื้อหาทั้งหมดของ "것" จึงเป็น **동격 관형사절**',
+      },
+
+      // --- 부사절 (3) ---
+      {
+        id: 14,
+        mainType: '부사절',
+        subType: 'adv_suffix',
+        difficulty: 'basic',
+        chapter: 'บทที่ 2: 부사절',
+        segments: [
+          { text: '비가', role: 'main' },
+          { text: '소리도', role: 'clause' },
+          { text: '없이', role: 'clause' },
+          { text: '내린다.', role: 'main' },
+        ],
+        bracketed: '비가 [소리도 없이] 내린다.',
+        thai: 'ฝนตกลงมาโดยไร้เสียง',
+        hint: 'สังเกต "소리도 없이" (มาจาก 소리가 없다 + -이) ที่แทรกอยู่กลางประโยคเพื่อขยายกริยา "내린다"',
+        matrixRole: 'ทำหน้าที่เป็น ส่วนขยายกริยา (부사어) ขยายภาคแสดง "내린다"',
+        diagnostic: 'สร้างด้วยปัจจัยวิเศษณ์ -이 และย้ายไปหน้าประโยคได้ (소리도 없이 비가 내린다) → 부사절',
+        explanation: 'เป็น 부사절 พื้นฐานที่สร้างด้วยปัจจัยสร้างคำวิเศษณ์ "-이" (มาจากประโยค 소리가 없다) ทำหน้าที่ขยายภาคแสดง "내린다" และสามารถย้ายไปหน้าประโยคได้ (소리도 없이 비가 내린다)',
+      },
+      {
+        id: 15,
+        mainType: '부사절',
+        subType: 'adv_suffix',
+        difficulty: 'basic',
+        chapter: 'บทที่ 2: 부사절',
+        segments: [
+          { text: '그는', role: 'main' },
+          { text: '형과', role: 'clause' },
+          { text: '달리', role: 'clause' },
+          { text: '말을 잘 한다.', role: 'main' },
+        ],
+        bracketed: '그는 [형과 달리] 말을 잘 한다.',
+        thai: 'เขาพูดเก่งต่างจากพี่ชาย',
+        hint: 'สังเกตคำว่า "달리" ซึ่งมาจากคำคุณศัพท์ "다르다" + ปัจจัยวิเศษณ์ "-이"',
+        matrixRole: 'ทำหน้าที่เป็น ส่วนขยายกริยา (부사어) ขยายภาคแสดง "말을 잘 한다"',
+        diagnostic: 'มาจาก (그가) 형과 다르다 + ปัจจัยวิเศษณ์ -이 → 달리 → -이/-게/-도록 부사절',
+        explanation: 'เป็น 부사절 จากรูป "(그가) 형과 다르다" + ปัจจัยสร้างคำวิเศษณ์ "-이" กลายเป็น "형과 달리" ทำหน้าที่ขยายภาคแสดง "말을 잘 한다" ของประโยคหลัก',
+      },
+      {
+        id: 16,
+        mainType: '부사절',
+        subType: 'adv_phrase',
+        difficulty: 'mid',
+        chapter: 'บทที่ 2: ขอบเขตของ 부사절',
+        segments: [
+          { text: '꽃들은', role: 'main' },
+          { text: '초록색 눈망울을', role: 'clause' },
+          { text: '갖고 있기 때문에', role: 'clause' },
+          { text: '초록색 세상을 더 꿈꾸는 것처럼 보였다.', role: 'main' },
+        ],
+        bracketed: '꽃들은 [초록색 눈망울을 갖고 있기 때문에] 초록색 세상을 더 꿈꾸는 것처럼 보였다.',
+        thai: 'เหล่าดอกไม้ดูราวกับกำลังฝันถึงโลกสีเขียวมากขึ้นเพราะมีดวงตาสีเขียว',
+        hint: 'สังเกตวลีเหตุผล "-기 때문에" ที่แทรกอยู่ตรงกลางระหว่างประธาน "꽃들은" กับภาคแสดงท้ายประโยค',
+        matrixRole: 'ทำหน้าที่เป็น ส่วนขยายกริยา (부사어) บอกเหตุผลแก่ประโยคหลัก',
+        diagnostic: 'รูปวลี -기 때문에 สามารถแทรกอยู่กลางประโยคหลัก (이동 가능성) จึงจัดเป็น 종속절·구 유형 부사절 ตามบทที่ 2',
+        explanation: 'จากตำราบทที่ 2: รูปวลี "-기 때문에" ที่สามารถแทรกอยู่กลางประโยคหลัก (꽃들은 ... 보였다) แสดงให้เห็นคุณสมบัติของการทำหน้าที่ขยายเหมือน 부사절 (ย้ายตำแหน่งเข้ากลางประโยคหลักได้)',
+      },
+
+      // --- 인용절 (2) ---
+      {
+        id: 17,
+        mainType: '인용절',
+        subType: 'quote_direct',
+        difficulty: 'basic',
+        chapter: 'บทที่ 2: 인용절',
+        segments: [
+          { text: '그 사람은', role: 'main' },
+          { text: '"저는 학생이에요."라고', role: 'clause' },
+          { text: '주장하였다.', role: 'main' },
+        ],
+        bracketed: '그 사람은 ["저는 학생이에요."라고] 주장하였다.',
+        thai: 'คนคนนั้นยืนยันว่า "ผมเป็นนักเรียนครับ"',
+        hint: 'มีเครื่องหมายคำพูด "..." และตัวบ่งชี้การอ้างคำพูดโดยตรง "-라고"',
+        matrixRole: 'ทำหน้าที่เป็น อนุประโยคอ้างคำพูด (ขยายภาคแสดง 주장하였다 — ตำรามองเป็น 직접 인용 부사절 ได้ด้วย)',
+        diagnostic: 'มีเครื่องหมายคำพูด "..." + -라고 ยกถ้อยคำเดิมมาตรงตัว → 직접 인용절',
+        explanation: 'เป็น 직접 인용절 ใช้เครื่องหมายคำพูดและตัวบ่งชี้ "-라고" ยกคำพูดเดิมมาโดยตรง (ตำราบทที่ 2 ชี้ว่าในเชิงหน้าที่สามารถมองเป็น 직접 인용 부사절 ที่ขยายกริยา 주장하였다 ได้เช่นกัน)',
+      },
+      {
+        id: 18,
+        mainType: '인용절',
+        subType: 'quote_indirect',
+        difficulty: 'basic',
+        chapter: 'บทที่ 2: 인용절',
+        segments: [
+          { text: '우리는', role: 'main' },
+          { text: '인간이', role: 'clause' },
+          { text: '누구나', role: 'clause' },
+          { text: '존귀하다고', role: 'clause' },
+          { text: '믿는다.', role: 'main' },
+        ],
+        bracketed: '우리는 [인간이 누구나 존귀하다고] 믿는다.',
+        thai: 'พวกเราเชื่อว่ามนุษย์ทุกคนล้วนมีคุณค่าสูงส่ง',
+        hint: 'สังเกตรูปลงท้าย "-다고" ที่ตามด้วยกริยาเชิงความคิด "믿는다" โดยไม่มีเครื่องหมายคำพูด',
+        matrixRole: 'ทำหน้าที่เป็น อนุประโยคอ้างคำพูด/ความคิด (ขยายภาคแสดง 믿는다)',
+        diagnostic: 'ใช้รูป -다고 อ้างความคิดโดยอ้อม ไม่มีเครื่องหมายคำพูด → 간접 인용절',
+        explanation: 'เป็น 간접 인용절 ใช้รูป "-다고" อ้างความคิดหรือคำพูดโดยอ้อม ทำหน้าที่ขยายภาคแสดง "믿는다" (ตำราบทที่ 2 ระบุว่าเชิงหน้าที่จัดเป็น 간접 인용 부사절 ได้ด้วย)',
+      },
+
+      // --- 서술절 (1) ---
+      {
+        id: 19,
+        mainType: '서술절',
+        subType: 'pred_double',
+        difficulty: 'mid',
+        chapter: 'บทที่ 2: 서술절',
+        segments: [
+          { text: '코끼리는', role: 'main' },
+          { text: '코가', role: 'clause' },
+          { text: '길다.', role: 'clause' },
+        ],
+        bracketed: '코끼리는 [코가 길다].',
+        thai: 'ช้างมีงวงยาว (ช้างนั้น งวงยาว)',
+        hint: 'มีคำนามที่มีลักษณะคล้ายประธาน 2 ตัวคือ "코끼리는" และ "코가" โดยไม่มีวิภัตติเปลี่ยนรูปใด ๆ',
+        matrixRole: 'อนุประโยค [코가 길다] ทั้งหมดทำหน้าที่เป็น ภาคแสดง (서술어) ให้กับประธานใหญ่ "코끼리는"',
+        diagnostic: '1) ไม่มีตัวบ่งชี้ 절 (절 표지 없음) 2) สลับตำแหน่งส่วนประกอบออกนอก 절 ได้ (코가 코끼리는 길다) → 서술절',
+        explanation: 'เป็น 서술절 (อนุประโยคภาคแสดง) ในไวยากรณ์โรงเรียน โดย "코가 길다" ทั้งอนุประโยคทำหน้าที่เป็นภาคแสดงของประธานใหญ่ "코끼리는" จุดเด่นสำคัญจากบทที่ 2 คือไม่มีตัวบ่งชี้절 (절 표지 없음)',
+      },
+
+      // --- 이어진 문장 (1) ---
+      {
+        id: 20,
+        mainType: '이어진 문장',
+        subType: 'conj_coord',
+        difficulty: 'mid',
+        chapter: 'บทที่ 2: 대등절 vs 종속절',
+        segments: [
+          { text: '인생은', role: 'clause' },
+          { text: '짧고', role: 'clause' },
+          { text: '예술은', role: 'main' },
+          { text: '길다.', role: 'main' },
+        ],
+        bracketed: '[인생은 짧고] [예술은 길다].',
+        thai: 'ชีวิตนั้นสั้น แต่ศิลปะยืนยาว',
+        hint: 'ลองย้ายประโยคหน้า "인생은 짧고" ไปแทรกกลางประโยคหลัง "*예술은 인생은 짧고 길다" ดูว่าทำได้หรือไม่',
+        matrixRole: 'ประโยคย่อย 2 ประโยคเชื่อมกันอย่างเท่าเทียม (대등적 연결) ด้วยวิภัตติเชื่อม "-고"',
+        diagnostic: 'ไม่สามารถย้ายประโยคหน้าไปแทรกกลางประโยคหลังได้ (*예술은 인생은 짧고 길다 ผิด) → 대등하게 이어진 문장',
+        explanation: 'เป็น 대등하게 이어진 문장 (ประโยคความรวมสมภาค) เชื่อมด้วย "-고" จุดสังเกตสำคัญจากตำราบทที่ 2 คือ ไม่สามารถย้ายประโยคหน้าไปแทรกกลางประโยคหลังได้ จึงแตกต่างจาก 종속절 และ 부사절',
+      },
+    ];
+
+    /**
+     * =========================================================================
+     * 3. APPLICATION STATE
+     * =========================================================================
+     */
+    const state = {
+      activeView: 'practice', // 'practice' | 'guide'
+      activeCategory: 'all',
+      questionList: [...QUESTIONS],
+      currentIndex: 0,
+      activeBrush: 'main', // 'main' | 'clause' | 'erase'
+      showTrans: false,
+      showHint: false,
+      // Keyed by question.id:
+      // { segments: { [idx]: 'main'|'clause' }, mainType: string|null, subType: string|null, checked: bool, revealed: bool, results: { segOk, mainOk, subOk, perfect } }
+      progress: {},
+    };
+
+    const el = {
+      mainTabs: document.querySelectorAll('.main-tab'),
+      viewPractice: document.getElementById('view-practice'),
+      viewGuide: document.getElementById('view-guide'),
+      categoryFilters: document.getElementById('category-filters'),
+      statProgress: document.getElementById('stat-progress'),
+      statScore: document.getElementById('stat-score'),
+      progressBar: document.getElementById('progress-bar'),
+      btnRandomize: document.getElementById('btn-randomize'),
+      btnResetAll: document.getElementById('btn-reset-all'),
+      exerciseContainer: document.getElementById('exercise-container'),
+      summaryContainer: document.getElementById('summary-container'),
+      qNumberBadge: document.getElementById('q-number-badge'),
+      qDifficultyBadge: document.getElementById('q-difficulty-badge'),
+      qChapterBadge: document.getElementById('q-chapter-badge'),
+      btnTts: document.getElementById('btn-tts'),
+      btnToggleTrans: document.getElementById('btn-toggle-trans'),
+      labelTrans: document.getElementById('label-trans'),
+      btnToggleHint: document.getElementById('btn-toggle-hint'),
+      labelHint: document.getElementById('label-hint'),
+      helperBoxes: document.getElementById('helper-boxes'),
+      boxTrans: document.getElementById('box-trans'),
+      textTrans: document.getElementById('text-trans'),
+      boxHint: document.getElementById('box-hint'),
+      textHint: document.getElementById('text-hint'),
+      brushBtns: document.querySelectorAll('.brush-btn'),
+      sentenceChips: document.getElementById('sentence-chips'),
+      mainTypeGrid: document.getElementById('main-type-grid'),
+      subtypeContainer: document.getElementById('subtype-container'),
+      btnCheck: document.getElementById('btn-check'),
+      btnSolution: document.getElementById('btn-solution'),
+      btnResetQ: document.getElementById('btn-reset-q'),
+      btnPrev: document.getElementById('btn-prev'),
+      btnNext: document.getElementById('btn-next'),
+      labelNext: document.getElementById('label-next'),
+      explanationPanel: document.getElementById('explanation-panel'),
+      expStatusIcon: document.getElementById('exp-status-icon'),
+      expStatusTitle: document.getElementById('exp-status-title'),
+      expStatusSub: document.getElementById('exp-status-sub'),
+      expStepBadges: document.getElementById('exp-step-badges'),
+      expBracketed: document.getElementById('exp-bracketed'),
+      expTranslation: document.getElementById('exp-translation'),
+      expCorrectTypes: document.getElementById('exp-correct-types'),
+      expMatrixRole: document.getElementById('exp-matrix-role'),
+      expDiagnostic: document.getElementById('exp-diagnostic'),
+      expDetail: document.getElementById('exp-detail'),
+      summaryCategoryLabel: document.getElementById('summary-category-label'),
+      sumTotal: document.getElementById('sum-total'),
+      sumPerfect: document.getElementById('sum-perfect'),
+      sumAccuracy: document.getElementById('sum-accuracy'),
+      summaryBreakdown: document.getElementById('summary-breakdown'),
+      btnSumRetry: document.getElementById('btn-sum-retry'),
+      btnSumAll: document.getElementById('btn-sum-all'),
+      btnSumGuide: document.getElementById('btn-sum-guide'),
+      toastContainer: document.getElementById('toast-container'),
+    };
+
+    /**
+     * =========================================================================
+     * 4. UTILITY FUNCTIONS
+     * =========================================================================
+     */
+    function showToast(msg, type = 'info') {
+      const palette = {
+        info: 'bg-slate-900 text-white',
+        warn: 'bg-amber-600 text-white',
+        error: 'bg-rose-600 text-white',
+        success: 'bg-emerald-600 text-white',
+      };
+      const div = document.createElement('div');
+      div.className = `pointer-events-auto px-4 py-3 rounded-2xl shadow-lg text-xs sm:text-sm font-medium animate-pop ${palette[type] || palette.info}`;
+      div.textContent = msg;
+      el.toastContainer.appendChild(div);
+      setTimeout(() => {
+        div.style.opacity = '0';
+        div.style.transform = 'translateY(-6px)';
+        div.style.transition = 'all 0.25s ease';
+        setTimeout(() => div.remove(), 260);
+      }, 2600);
+    }
+
+    function getProgress(qId) {
+      if (!state.progress[qId]) {
+        state.progress[qId] = {
+          segments: {},
+          mainType: null,
+          subType: null,
+          checked: false,
+          revealed: false,
+          results: null,
+        };
+      }
+      return state.progress[qId];
+    }
+
+    function getSubtypeObj(mainType, subTypeId) {
+      const list = SUBTYPES_MAP[mainType] || [];
+      return list.find((s) => s.id === subTypeId) || null;
+    }
+
+    function getPerfectCount(list) {
+      return list.reduce((acc, q) => {
+        const p = state.progress[q.id];
+        return acc + (p && p.checked && !p.revealed && p.results && p.results.perfect ? 1 : 0);
+      }, 0);
+    }
+
+    /**
+     * =========================================================================
+     * 5. RENDERING FUNCTIONS
+     * =========================================================================
+     */
+    function renderMainTabs() {
+      el.mainTabs.forEach((btn) => {
+        const active = btn.dataset.view === state.activeView;
+        btn.className = `main-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+          active
+            ? 'bg-white text-blue-700 shadow-xs'
+            : 'text-slate-600 hover:text-slate-900'
+        }`;
+      });
+      el.viewPractice.classList.toggle('hidden', state.activeView !== 'practice');
+      el.viewGuide.classList.toggle('hidden', state.activeView !== 'guide');
+    }
+
+    function renderCategoryFilters() {
+      const categories = [
+        { id: 'all', label: `ทั้งหมด (${QUESTIONS.length})` },
+        ...MAIN_TYPES.map((t) => ({
+          id: t.id,
+          label: `${t.kr} (${QUESTIONS.filter((q) => q.mainType === t.id).length})`,
+        })),
+      ];
+
+      el.categoryFilters.innerHTML = '';
+      categories.forEach((cat) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        const isActive = state.activeCategory === cat.id;
+        btn.className = `shrink-0 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all cursor-pointer font-kr ${
+          isActive
+            ? 'bg-slate-900 text-white shadow-xs font-semibold'
+            : 'bg-slate-100/90 text-slate-600 hover:bg-slate-200/80 hover:text-slate-900'
+        }`;
+        btn.textContent = cat.label;
+        btn.addEventListener('click', () => selectCategory(cat.id));
+        el.categoryFilters.appendChild(btn);
+      });
+    }
+
+    function renderBrushes() {
+      const styles = {
+        main: {
+          active: 'bg-blue-50 border-blue-600 text-blue-950 ring-2 ring-blue-500/20 shadow-xs',
+          idle: 'bg-white border-slate-200 text-slate-700 hover:border-blue-300 hover:bg-blue-50/40',
+        },
+        clause: {
+          active: 'bg-amber-50 border-amber-500 text-amber-950 ring-2 ring-amber-500/20 shadow-xs',
+          idle: 'bg-white border-slate-200 text-slate-700 hover:border-amber-300 hover:bg-amber-50/40',
+        },
+        erase: {
+          active: 'bg-slate-100 border-slate-500 text-slate-900 ring-2 ring-slate-400/20',
+          idle: 'bg-white border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50',
+        },
+      };
+
+      el.brushBtns.forEach((btn) => {
+        const b = btn.dataset.brush;
+        const active = state.activeBrush === b;
+        btn.className = `brush-btn flex items-center gap-3 px-4 py-3 rounded-2xl border-2 text-left transition-all cursor-pointer ${
+          active ? styles[b].active : styles[b].idle
+        }`;
+      });
+    }
+
+    function updateHelperBoxes() {
+      const any = state.showTrans || state.showHint;
+      el.helperBoxes.classList.toggle('hidden', !any);
+      el.boxTrans.classList.toggle('hidden', !state.showTrans);
+      el.boxHint.classList.toggle('hidden', !state.showHint);
+      el.labelTrans.textContent = state.showTrans ? 'ซ่อนคำแปล' : 'แปลภาษาไทย';
+      el.labelHint.textContent = state.showHint ? 'ซ่อนคำใบ้' : 'คำใบ้';
+    }
+
+    function renderQuestion() {
+      const q = state.questionList[state.currentIndex];
+      if (!q) return;
+
+      const prog = getProgress(q.id);
+      const total = state.questionList.length;
+
+      el.exerciseContainer.classList.remove('hidden');
+      el.summaryContainer.classList.add('hidden');
+
+      // Status bar
+      el.statProgress.textContent = `${state.currentIndex + 1} / ${total}`;
+      el.statScore.textContent = getPerfectCount(state.questionList);
+      el.progressBar.style.width = `${((state.currentIndex + 1) / total) * 100}%`;
+
+      // Header badges
+      el.qNumberBadge.textContent = `ข้อ ${state.currentIndex + 1}`;
+      const diff = DIFFICULTY_META[q.difficulty];
+      el.qDifficultyBadge.textContent = diff.label;
+      el.qDifficultyBadge.className = `inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${diff.cls}`;
+      el.qChapterBadge.textContent = q.chapter;
+
+      // Translation & Hint
+      el.textTrans.textContent = q.thai;
+      el.textHint.textContent = q.hint;
+      updateHelperBoxes();
+
+      // Step 1: Render Sentence Chips
+      el.sentenceChips.innerHTML = '';
+      q.segments.forEach((seg, idx) => {
+        const chosen = prog.segments[idx];
+        const btn = document.createElement('button');
+        btn.type = 'button';
+
+        let cls =
+          'relative inline-flex items-center justify-center px-4 py-2.5 rounded-2xl border-2 font-kr text-lg sm:text-2xl font-medium transition-all select-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400/40';
+
+        if (prog.checked) {
+          const isOk = chosen === seg.role;
+          if (isOk) {
+            if (seg.modifiedNoun) {
+              cls += ' bg-emerald-50 border-emerald-500 text-emerald-950 ring-2 ring-emerald-400/40';
+            } else if (seg.role === 'main') {
+              cls += ' bg-blue-50 border-blue-500 text-blue-950 ring-2 ring-emerald-400/40';
+            } else {
+              cls += ' bg-amber-50 border-amber-500 text-amber-950 ring-2 ring-emerald-400/40';
+            }
+          } else {
+            cls += ' bg-rose-50 border-rose-500 text-rose-950 ring-2 ring-rose-300/60';
+          }
+        } else if (chosen === 'main') {
+          cls += ' bg-blue-50 border-blue-500 text-blue-950 shadow-xs';
+        } else if (chosen === 'clause') {
+          cls += ' bg-amber-50 border-amber-500 text-amber-950 shadow-xs';
+        } else {
+          cls += ' bg-white border-slate-300 border-dashed text-slate-800 hover:border-blue-400 hover:bg-blue-50/30';
+        }
+        btn.className = cls;
+
+        // Top floating label
+        if (chosen) {
+          const tag = document.createElement('span');
+          const wrong = prog.checked && chosen !== seg.role;
+          const labelText = chosen === 'main' ? 'ประโยคหลัก' : 'อนุประโยค';
+          let tagBg = chosen === 'main' ? 'bg-blue-600 text-white' : 'bg-amber-500 text-white';
+          if (wrong) tagBg = 'bg-rose-600 text-white';
+          else if (prog.checked && seg.modifiedNoun) tagBg = 'bg-emerald-600 text-white';
+
+          tag.className = `absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-0.5 rounded-full text-[11px] font-thai font-semibold shadow-xs flex items-center gap-1 ${tagBg}`;
+
+          if (prog.checked) {
+            const icon = wrong
+              ? '<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>'
+              : '<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>';
+            const displayLabel = !wrong && seg.modifiedNoun ? 'หลัก·นามถูกขยาย' : labelText;
+            tag.innerHTML = `${icon}<span>${displayLabel}</span>`;
+          } else {
+            tag.textContent = labelText;
+          }
+          btn.appendChild(tag);
+        }
+
+        // Main Korean text
+        const span = document.createElement('span');
+        span.textContent = seg.text;
+        btn.appendChild(span);
+
+        // Bottom correction pill if wrong after check
+        if (prog.checked && chosen !== seg.role) {
+          const fix = document.createElement('span');
+          const correctLabel = seg.role === 'main' ? (seg.modifiedNoun ? 'หลัก (นามถูกขยาย)' : 'ประโยคหลัก') : 'อนุประโยค';
+          const colorCls = seg.role === 'main' ? 'text-blue-700' : 'text-amber-700';
+          fix.className = 'absolute -bottom-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded-full text-[10px] font-thai font-semibold bg-white border border-slate-300 shadow-xs text-slate-700';
+          fix.innerHTML = `ที่ถูก: <span class="${colorCls}">${correctLabel}</span>`;
+          btn.appendChild(fix);
+        }
+
+        btn.addEventListener('click', () => handleSegmentClick(idx));
+        el.sentenceChips.appendChild(btn);
+      });
+
+      // Step 2: Render Main Types
+      renderMainTypes(q, prog);
+
+      // Step 3: Render Subtypes
+      renderSubtypes(q, prog);
+
+      // Explanation Panel
+      if (prog.checked) {
+        renderExplanation(q, prog);
+      } else {
+        el.explanationPanel.classList.add('hidden');
+      }
+
+      // Nav buttons
+      el.btnPrev.disabled = state.currentIndex === 0;
+      el.labelNext.textContent = state.currentIndex === total - 1 ? 'ดูสรุปผลคะแนน' : 'ข้อถัดไป';
+    }
+
+    function renderMainTypes(q, prog) {
+      el.mainTypeGrid.innerHTML = '';
+      MAIN_TYPES.forEach((t) => {
+        const isSelected = prog.mainType === t.id;
+        const isCorrectAnswer = q.mainType === t.id;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+
+        let cls = 'p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer flex flex-col justify-between gap-1 ';
+        if (prog.checked) {
+          if (isSelected && isCorrectAnswer) {
+            cls += 'bg-emerald-50 border-emerald-500 text-emerald-950 ring-2 ring-emerald-400/30';
+          } else if (isSelected && !isCorrectAnswer) {
+            cls += 'bg-rose-50 border-rose-500 text-rose-950';
+          } else if (!isSelected && isCorrectAnswer) {
+            cls += 'bg-emerald-50/50 border-emerald-400 border-dashed text-emerald-900';
+          } else {
+            cls += 'bg-white border-slate-200/70 text-slate-400 opacity-70';
+          }
+        } else if (isSelected) {
+          cls += 'bg-blue-50 border-blue-600 text-blue-950 ring-2 ring-blue-500/20 shadow-xs';
+        } else {
+          cls += 'bg-white border-slate-200 text-slate-700 hover:border-blue-300 hover:bg-slate-50/80';
+        }
+
+        btn.className = cls;
+        btn.innerHTML = `
+          <div class="flex items-center justify-between gap-1">
+            <span class="font-kr font-bold text-sm sm:text-base">${t.kr}</span>
+            ${
+              prog.checked && isCorrectAnswer
+                ? '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-600 text-white">ถูก</span>'
+                : prog.checked && isSelected && !isCorrectAnswer
+                ? '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-rose-600 text-white">ผิด</span>'
+                : ''
+            }
+          </div>
+          <div class="text-xs opacity-90">${t.th}</div>
+          <div class="text-[11px] font-kr opacity-65 mt-0.5">${t.hint}</div>
+        `;
+
+        btn.addEventListener('click', () => handleSelectMainType(t.id));
+        el.mainTypeGrid.appendChild(btn);
+      });
+    }
+
+    function renderSubtypes(q, prog) {
+      el.subtypeContainer.innerHTML = '';
+
+      if (!prog.mainType) {
+        el.subtypeContainer.innerHTML = `
+          <div class="px-4 py-5 rounded-2xl bg-slate-50 border border-dashed border-slate-300 text-center text-xs sm:text-sm text-slate-500">
+            กรุณาเลือก <strong>ประเภทหลักของอนุประโยค (ขั้นตอนที่ 2)</strong> ก่อน เพื่อแสดงตัวเลือกประเภทย่อยครับ
+          </div>
+        `;
+        return;
+      }
+
+      const list = SUBTYPES_MAP[prog.mainType] || [];
+      const grid = document.createElement('div');
+      grid.className = `grid grid-cols-1 ${list.length > 1 ? 'sm:grid-cols-2' : ''} gap-2.5 animate-fade-in`;
+
+      list.forEach((sub) => {
+        const isSelected = prog.subType === sub.id;
+        const isCorrectAnswer = q.subType === sub.id;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+
+        let cls = 'p-4 rounded-2xl border-2 text-left transition-all cursor-pointer space-y-1 ';
+        if (prog.checked) {
+          if (isSelected && isCorrectAnswer) {
+            cls += 'bg-emerald-50 border-emerald-500 text-emerald-950 ring-2 ring-emerald-400/30';
+          } else if (isSelected && !isCorrectAnswer) {
+            cls += 'bg-rose-50 border-rose-500 text-rose-950';
+          } else if (!isSelected && isCorrectAnswer) {
+            cls += 'bg-emerald-50/50 border-emerald-400 border-dashed text-emerald-900';
+          } else {
+            cls += 'bg-white border-slate-200/70 text-slate-400 opacity-70';
+          }
+        } else if (isSelected) {
+          cls += 'bg-indigo-50 border-indigo-600 text-indigo-950 ring-2 ring-indigo-500/20 shadow-xs';
+        } else {
+          cls += 'bg-white border-slate-200 text-slate-700 hover:border-indigo-300 hover:bg-slate-50/80';
+        }
+
+        btn.className = cls;
+        btn.innerHTML = `
+          <div class="flex items-center justify-between gap-2">
+            <span class="font-kr font-bold text-sm sm:text-base">${sub.title}</span>
+            ${
+              prog.checked && isCorrectAnswer
+                ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-600 text-white shrink-0">ถูกต้อง</span>'
+                : prog.checked && isSelected && !isCorrectAnswer
+                ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-600 text-white shrink-0">ไม่ตรง</span>'
+                : ''
+            }
+          </div>
+          <p class="text-xs opacity-85 leading-relaxed">${sub.desc}</p>
+        `;
+
+        btn.addEventListener('click', () => handleSelectSubType(sub.id));
+        grid.appendChild(btn);
+      });
+
+      el.subtypeContainer.appendChild(grid);
+    }
+
+    function renderExplanation(q, prog) {
+      el.explanationPanel.classList.remove('hidden');
+      const res = prog.results;
+
+      // Status Header
+      if (prog.revealed) {
+        el.expStatusIcon.className = 'w-9 h-9 rounded-2xl flex items-center justify-center shrink-0 bg-amber-100 text-amber-700';
+        el.expStatusIcon.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>';
+        el.expStatusTitle.textContent = 'เฉลยโครงสร้างประโยค';
+        el.expStatusSub.textContent = 'ศึกษาโครงสร้างและเกณฑ์การตรวจสอบด้านล่างได้เลยครับ';
+      } else if (res.perfect) {
+        el.expStatusIcon.className = 'w-9 h-9 rounded-2xl flex items-center justify-center shrink-0 bg-emerald-100 text-emerald-700';
+        el.expStatusIcon.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>';
+        el.expStatusTitle.textContent = 'ยอดเยี่ยม! วิเคราะห์ถูกต้องครบทั้ง 3 ขั้นตอน';
+        el.expStatusSub.textContent = 'คุณแยกส่วนประโยค ประเภทหลัก และประเภทย่อยได้แม่นยำสมบูรณ์';
+      } else {
+        const count = [res.segOk, res.mainOk, res.subOk].filter(Boolean).length;
+        el.expStatusIcon.className = 'w-9 h-9 rounded-2xl flex items-center justify-center shrink-0 bg-rose-100 text-rose-700';
+        el.expStatusIcon.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>';
+        el.expStatusTitle.textContent = `ถูกบางส่วน (${count} / 3 ขั้นตอน)`;
+        el.expStatusSub.textContent = 'ดูจุดที่ยังไม่ตรงจากป้ายด้านขวา และอ่านคำอธิบายประกอบด้านล่าง';
+      }
+
+      // 3 Individual Pass/Fail Badges
+      const makeBadge = (label, ok) => {
+        if (prog.revealed) {
+          return `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200">${label}: เฉลย</span>`;
+        }
+        return ok
+          ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">✓ ${label}</span>`
+          : `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">✗ ${label}</span>`;
+      };
+
+      el.expStepBadges.innerHTML =
+        makeBadge('1. แยกส่วน', res.segOk) +
+        makeBadge('2. ประเภทหลัก', res.mainOk) +
+        makeBadge('3. ประเภทย่อย', res.subOk);
+
+      // Bracketed analysis with highlighted brackets
+      const highlightedBracket = q.bracketed.replace(
+        /\[([^\]]+)\]/g,
+        '<span class="text-amber-300 font-bold">[$1]</span>'
+      );
+      el.expBracketed.innerHTML = highlightedBracket;
+      el.expTranslation.textContent = `คำแปล: ${q.thai}`;
+
+      const subObj = getSubtypeObj(q.mainType, q.subType);
+      el.expCorrectTypes.textContent = `${q.mainType} → ${subObj ? subObj.title : q.subType}`;
+      el.expMatrixRole.textContent = q.matrixRole;
+      el.expDiagnostic.textContent = q.diagnostic;
+      el.expDetail.textContent = q.explanation;
+    }
+
+    function renderSummary() {
+      el.exerciseContainer.classList.add('hidden');
+      el.summaryContainer.classList.remove('hidden');
+
+      const list = state.questionList;
+      const total = list.length;
+      const perfect = getPerfectCount(list);
+      const acc = total > 0 ? Math.round((perfect / total) * 100) : 0;
+
+      const catTitle = state.activeCategory === 'all' ? 'ทั้งหมด (ทุกประเภท)' : state.activeCategory;
+      el.summaryCategoryLabel.textContent = `หมวดที่ฝึก: ${catTitle}`;
+      el.sumTotal.textContent = `${total} ข้อ`;
+      el.sumPerfect.textContent = `${perfect} ข้อ`;
+      el.sumAccuracy.textContent = `${acc}%`;
+
+      // Breakdown by mainType present in current list
+      const typesInList = [...new Set(list.map((q) => q.mainType))];
+      el.summaryBreakdown.innerHTML = '';
+
+      typesInList.forEach((typeId) => {
+        const subset = list.filter((q) => q.mainType === typeId);
+        const subPerfect = getPerfectCount(subset);
+        const pct = Math.round((subPerfect / subset.length) * 100);
+        const meta = MAIN_TYPES.find((t) => t.id === typeId);
+
+        const row = document.createElement('div');
+        row.className = 'p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2';
+        row.innerHTML = `
+          <div class="flex items-center justify-between text-xs sm:text-sm">
+            <div class="font-semibold text-slate-800">
+              <span class="font-kr text-indigo-700">${typeId}</span>
+              <span class="text-slate-500 font-normal ml-1">(${meta ? meta.th : ''})</span>
+            </div>
+            <div class="font-bold text-slate-900">${subPerfect} / ${subset.length} ข้อ (${pct}%)</div>
+          </div>
+          <div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+            <div class="h-full bg-emerald-500 rounded-full transition-all" style="width: ${pct}%;"></div>
+          </div>
+        `;
+        el.summaryBreakdown.appendChild(row);
+      });
+    }
+
+    /**
+     * =========================================================================
+     * 6. INTERACTION HANDLERS
+     * =========================================================================
+     */
+    function handleSegmentClick(idx) {
+      const q = state.questionList[state.currentIndex];
+      const prog = getProgress(q.id);
+      if (prog.checked) {
+        prog.checked = false;
+      }
+
+      if (state.activeBrush === 'erase') {
+        delete prog.segments[idx];
+      } else if (prog.segments[idx] === state.activeBrush) {
+        delete prog.segments[idx];
+      } else {
+        prog.segments[idx] = state.activeBrush;
+      }
+      renderQuestion();
+    }
+
+    function handleSelectMainType(typeId) {
+      const q = state.questionList[state.currentIndex];
+      const prog = getProgress(q.id);
+      if (prog.checked) {
+        prog.checked = false;
+      }
+
+      if (prog.mainType !== typeId) {
+        prog.mainType = typeId;
+        const subs = SUBTYPES_MAP[typeId] || [];
+        // Auto-select if only 1 subtype exists (e.g., 서술절)
+        prog.subType = subs.length === 1 ? subs[0].id : null;
+      }
+      renderQuestion();
+    }
+
+    function handleSelectSubType(subId) {
+      const q = state.questionList[state.currentIndex];
+      const prog = getProgress(q.id);
+      if (prog.checked) {
+        prog.checked = false;
+      }
+      prog.subType = subId;
+      renderQuestion();
+    }
+
+    function handleCheckAnswer() {
+      const q = state.questionList[state.currentIndex];
+      const prog = getProgress(q.id);
+
+      // Validate all 3 steps are filled
+      const taggedCount = Object.keys(prog.segments).length;
+      if (taggedCount < q.segments.length) {
+        showToast('ขั้นตอนที่ 1: กรุณาระบายสีประโยคหลักและอนุประโยคให้ครบทุกคำก่อนครับ', 'warn');
+        return;
+      }
+      if (!prog.mainType) {
+        showToast('ขั้นตอนที่ 2: กรุณาเลือกประเภทหลักของอนุประโยคครับ', 'warn');
+        return;
+      }
+      if (!prog.subType) {
+        showToast('ขั้นตอนที่ 3: กรุณาเลือกประเภทย่อยของอนุประโยคครับ', 'warn');
+        return;
+      }
+
+      const segOk = q.segments.every((s, idx) => prog.segments[idx] === s.role);
+      const mainOk = prog.mainType === q.mainType;
+      const subOk = prog.subType === q.subType;
+      const perfect = segOk && mainOk && subOk;
+
+      prog.checked = true;
+      prog.results = { segOk, mainOk, subOk, perfect };
+
+      renderQuestion();
+
+      if (perfect && !prog.revealed) {
+        showToast('ถูกต้องสมบูรณ์ครบทั้ง 3 ขั้นตอน! เก่งมากครับ', 'success');
+      } else {
+        showToast('ตรวจคำตอบแล้ว ดูรายละเอียดเฉลยด้านล่างได้เลยครับ', 'info');
+      }
+    }
+
+    function handleShowSolution() {
+      const q = state.questionList[state.currentIndex];
+      const prog = getProgress(q.id);
+
+      const alreadySolvedLegit = prog.checked && !prog.revealed && prog.results && prog.results.perfect;
+
+      q.segments.forEach((s, idx) => {
+        prog.segments[idx] = s.role;
+      });
+      prog.mainType = q.mainType;
+      prog.subType = q.subType;
+      prog.checked = true;
+      prog.results = { segOk: true, mainOk: true, subOk: true, perfect: true };
+
+      if (!alreadySolvedLegit) {
+        prog.revealed = true;
+      }
+
+      renderQuestion();
+    }
+
+    function handleResetCurrentQuestion() {
+      const q = state.questionList[state.currentIndex];
+      delete state.progress[q.id];
+      renderQuestion();
+      showToast('ล้างคำตอบข้อนี้แล้ว', 'info');
+    }
+
+    function selectCategory(catId) {
+      state.activeCategory = catId;
+      state.questionList =
+        catId === 'all' ? [...QUESTIONS] : QUESTIONS.filter((q) => q.mainType === catId);
+      state.currentIndex = 0;
+      state.showTrans = false;
+      state.showHint = false;
+      renderCategoryFilters();
+      renderQuestion();
+    }
+
+    function handleRandomize() {
+      const arr = [...state.questionList];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      state.questionList = arr;
+      state.currentIndex = 0;
+      state.showTrans = false;
+      state.showHint = false;
+      renderQuestion();
+      showToast('สุ่มลำดับข้อสอบเรียบร้อยแล้ว', 'info');
+    }
+
+    function handleResetSet() {
+      state.questionList.forEach((q) => delete state.progress[q.id]);
+      state.currentIndex = 0;
+      state.showTrans = false;
+      state.showHint = false;
+      renderQuestion();
+      showToast('รีเซ็ตคะแนนในชุดนี้เรียบร้อยแล้ว', 'info');
+    }
+
+    function handleTTS() {
+      const q = state.questionList[state.currentIndex];
+      if (!q) return;
+      const fullText = q.segments.map((s) => s.text).join(' ');
+
+      if (!('speechSynthesis' in window)) {
+        showToast('เบราว์เซอร์นี้ไม่รองรับการอ่านออกเสียงภาษาเกาหลี', 'error');
+        return;
+      }
+
+      try {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(fullText);
+        utter.lang = 'ko-KR';
+        utter.rate = 0.88;
+        const voices = window.speechSynthesis.getVoices();
+        const koVoice = voices.find((v) => v.lang && v.lang.toLowerCase().startsWith('ko'));
+        if (koVoice) utter.voice = koVoice;
+
+        el.btnTts.classList.add('bg-blue-100', 'text-blue-700', 'border-blue-300');
+        utter.onend = () => el.btnTts.classList.remove('bg-blue-100', 'text-blue-700', 'border-blue-300');
+        utter.onerror = () => {
+          el.btnTts.classList.remove('bg-blue-100', 'text-blue-700', 'border-blue-300');
+          showToast('ไม่สามารถเล่นเสียงได้ในขณะนี้', 'warn');
+        };
+        window.speechSynthesis.speak(utter);
+      } catch (e) {
+        showToast('เกิดข้อผิดพลาดในการเล่นเสียง', 'error');
+      }
+    }
+
+    /**
+     * =========================================================================
+     * 7. INITIALIZATION
+     * =========================================================================
+     */
+    function init() {
+      // Main view switching
+      el.mainTabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          state.activeView = tab.dataset.view;
+          renderMainTabs();
+        });
+      });
+
+      // Brush selector
+      el.brushBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.activeBrush = btn.dataset.brush;
+          renderBrushes();
+        });
+      });
+
+      // Utility controls
+      el.btnTts.addEventListener('click', handleTTS);
+      el.btnToggleTrans.addEventListener('click', () => {
+        state.showTrans = !state.showTrans;
+        updateHelperBoxes();
+      });
+      el.btnToggleHint.addEventListener('click', () => {
+        state.showHint = !state.showHint;
+        updateHelperBoxes();
+      });
+      el.btnRandomize.addEventListener('click', handleRandomize);
+      el.btnResetAll.addEventListener('click', handleResetSet);
+
+      // Exercise actions
+      el.btnCheck.addEventListener('click', handleCheckAnswer);
+      el.btnSolution.addEventListener('click', handleShowSolution);
+      el.btnResetQ.addEventListener('click', handleResetCurrentQuestion);
+
+      // Navigation
+      el.btnPrev.addEventListener('click', () => {
+        if (state.currentIndex > 0) {
+          state.currentIndex--;
+          state.showTrans = false;
+          state.showHint = false;
+          renderQuestion();
+        }
+      });
+
+      el.btnNext.addEventListener('click', () => {
+        if (state.currentIndex < state.questionList.length - 1) {
+          state.currentIndex++;
+          state.showTrans = false;
+          state.showHint = false;
+          renderQuestion();
+        } else {
+          renderSummary();
+        }
+      });
+
+      // Summary buttons
+      el.btnSumRetry.addEventListener('click', handleResetSet);
+      el.btnSumAll.addEventListener('click', () => selectCategory('all'));
+      el.btnSumGuide.addEventListener('click', () => {
+        state.activeView = 'guide';
+        renderMainTabs();
+      });
+
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.getVoices();
+      }
+
+      // First Render
+      renderMainTabs();
+      renderCategoryFilters();
+      renderBrushes();
+      renderQuestion();
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
